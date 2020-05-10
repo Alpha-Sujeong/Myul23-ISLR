@@ -12,7 +12,7 @@ summary(lm.fit);	summary(lm.fit)$r.sq;	summary(lm.fit)$sigma
 # names(lm.fit);	coef(lm.fit);	confint(lm.fit): 회귀변수 2.5, 97.5 백분위수 값
 
 predict(lm.fit, data.frame(lstat=c(5,10,15)), interval="confidence")
-predict(lm.fit, data.frame(lstat=c(5,10,15))), interval="prediction")
+predict(lm.fit, data.frame(lstat=c(5,10,15)), interval="prediction")
 
 plot(lstat, medv)
 
