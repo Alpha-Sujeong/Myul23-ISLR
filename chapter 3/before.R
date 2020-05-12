@@ -40,6 +40,7 @@ summary(lm.fit1)
 
 summary(lm(medv ~ lstat*age, data=Boston)
 
+# special formula mark ^, I()를 통해 값의 제곱임을 표현
 lm.fit2 = lm(medv ~ lstat + I(lstat^2))
 summary(lm.fit2)
 
