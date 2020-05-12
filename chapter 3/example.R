@@ -1,4 +1,4 @@
-# 동봉된 문제.. 귀찮아서 풀다 말았음..
+# 동봉된 문제. 나중에는 다 풀어놔야지.
 # 1) sales = TV + radio	# sales = 2.939 + 0.046TV + 0.189radio + e
 # 2) KNN classifier is one of classifies to groups, but KNN regression is finding relations of dependent and independent variables.
 
