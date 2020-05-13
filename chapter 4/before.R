@@ -1,12 +1,12 @@
-# classify¸¦ À§ÇØ¼­ Bayes' TheoreamÀ» ÀÌ¿ë, Bayes' Classifier¸¦ ±¸ÇØ¾ß ÇÔ.
-# ÀÌ ¶§¹®¿¡ LR, LDA, QDA, KNN ¹æ¹ıÀ» ºñ±³
+# classifyë¥¼ ìœ„í•´ì„œ Bayes' Theoreamì„ ì´ìš©, Bayes' Classifierë¥¼ êµ¬í•´ì•¼ í•¨.
+# ì´ ë•Œë¬¸ì— LR, LDA, QDA, KNN ë°©ë²•ì„ ë¹„êµ
 # LR: Normal, response: Yes or No
-# LDA: Gaussian(Multiple Normal), response: 2 cases
-# QDA: Normal, no Linear, response: 2°³ ÀÌ»ó
-# KNN: 1ÀÌ°Å³ª class levelÀ» Á¤ÇØ¾ß ÇÔ, ¼±ÇüÀÏ ¶§¸¦ Á¦¿ÜÇÏ°í´Â ¼öÁØÀ» Á¤ÇßÀ» ¶§°¡ ÀÌ»óÀûÀÎ ¹æ¹ıÀÌ±ä ÇÑµ¥ ´Ù¸¥ ¹æ¹ı·Ğ¿¡ ºñÇØ ¾Ç, ÃÖ¾ÇÀÌ °É¸± ¼öÁØÀÌ °¡´É¼ºÀÌ ³ô¾Æ¼­..
+# LDA: Gaussian(Multiple Normal), response: 2ê°œ ì´ìƒ, ì„ í˜• ë¶„ë¦¬, íŒŒì´ ê°’ ì •í•´ì•¼ í•¨.
+# QDA: Normal, no Linear, response: 2ê°œ ì´ìƒ
+# KNN: 1ì´ê±°ë‚˜ class levelì„ ì •í•´ì•¼ í•¨, ì„ í˜•ì¼ ë•Œë¥¼ ì œì™¸í•˜ê³ ëŠ” ìˆ˜ì¤€ì„ ì •í–ˆì„ ë•Œê°€ ì´ìƒì ì¸ ë°©ë²•ì´ê¸´ í•œë° ë‹¤ë¥¸ ë°©ë²•ë¡ ì— ë¹„í•´ ì•…, ìµœì•…ì´ ê±¸ë¦´ ìˆ˜ì¤€ì´ ê°€ëŠ¥ì„±ì´ ë†’ì•„ì„œ..
 
 
-# ¿¹Á¦¸¦ ÅëÇÑ response classify prediction ÇÔ¼ö ¸ğÀ½
+# ì˜ˆì œë¥¼ í†µí•œ response classify prediction í•¨ìˆ˜ ëª¨ìŒ
 library(ISLR) # Smarket: Stock Market Data
 summary(Smarket)
 
@@ -26,16 +26,16 @@ summary(glm.fits)
 glm.probs = predict(glm.fits, type = "response")
 glm.probs[1:10]
 
-# ÁúÀû ¹İÀÀº¯¼ö direction¿¡ ´ëÇÑ Á¾ÇÕÀû Æò°¡
+# ì§ˆì  ë°˜ì‘ë³€ìˆ˜ directionì— ëŒ€í•œ ì¢…í•©ì  í‰ê°€
 contrasts(Direction)
 
 glm.pred = rep("Down", 1250)
 glm.pred[glm.probs > 0.5] = "Up"
 
 table(glm.pred, Direction)
-mean(glm.pred == Direction) # ÀüÃ¼ Áß, ¸Â°Ô ºĞ·ùÇÑ È®·ü, 52.2%
+mean(glm.pred == Direction) # ì „ì²´ ì¤‘, ë§ê²Œ ë¶„ë¥˜í•œ í™•ë¥ , 52.2%
 
-# yearÀ» ±âÁØÀ¸·Î train µ¥ÀÌÅÍ Á¤ÇØ³õ°í ¸¸µé±â
+# yearì„ ê¸°ì¤€ìœ¼ë¡œ train ë°ì´í„° ì •í•´ë†“ê³  ë§Œë“¤ê¸°
 train = (Year < 2005)
 Smarket.2005 = Smarket[!train,]
 dim(Smarket.2005) # sum(!train)
@@ -48,7 +48,7 @@ glm.pred[glm.probs > 0.5] = "Up"
 table(glm.pred, Direction.2005)
 mean(glm.pred == Direction.2005)  # 48%
 
-# °á·Ğ: º¯¼ö¸¦ ´Ù ³Ö´Â °Íº¸´Ù 2°³¸¸ ³ÖÀº °Ô ´õ Àß ¿¹ÃøµÇ´õ¶ó.
+# ê²°ë¡ : ë³€ìˆ˜ë¥¼ ë‹¤ ë„£ëŠ” ê²ƒë³´ë‹¤ 2ê°œë§Œ ë„£ì€ ê²Œ ë” ì˜ ì˜ˆì¸¡ë˜ë”ë¼.
 glm.fits = glm(Direction ~ Lag1 + Lag2, family = binomial, subset = train)
 glm.probs = predict(glm.fits, Smarket.2005, type = "response")
 glm.pred = rep("Down", 252)
@@ -62,7 +62,7 @@ predict(glm.fits, newdata = data.frame(Lag1 = c(1.2, 1.5), Lag2 = c(1.1, -0.8)),
 # LDA, Linear Discriminant Analysis
 library(MASS)
 lda.fit = lda(Direction ~ Lag1 + Lag2, subset = train)
-lda.fit # ÆÄÀÌ1 = 0.492, ÆÄÀÌ2 = 0.508
+lda.fit # íŒŒì´1 = 0.492, íŒŒì´2 = 0.508
 
 lda.pred = predict(lda.fit, Smarket.2005)
 # names(lda.pred)
@@ -71,7 +71,7 @@ lda.class = lda.pred$class
 table(lda.class, Direction.2005)
 mean(lda.class == Direction.2005)  # 56%
 
-# ¸ğµ¨¿¡¼­ »çÈÄ È®·üÀº ¸¶ÄÏ ¼ºÀå·ü °¨¼Ò¿Í ¿¬°üÀÌ ÀÖ´Ù
+# ëª¨ë¸ì—ì„œ ì‚¬í›„ í™•ë¥ ì€ ë§ˆì¼“ ì„±ì¥ë¥  ê°ì†Œì™€ ì—°ê´€ì´ ìˆë‹¤
 sum(lda.pred$posterior[,1] >= .5)
 sum(lda.pred$posterior[,1] < 0.5)
 
@@ -115,7 +115,7 @@ standardized.X = scale(Caravan[,-86])
 var(Caravan[,1]); var(Caravan[,2])
 # var(standardized.X[,1]);  var(standardized.X[,2])
 
-# test data set ¸¸µå´Â Áß
+# test data set ë§Œë“œëŠ” ì¤‘
 test = 1:1000
 train.X = standardized.X[-test,]
 test.X = standardized.X[test,]
@@ -124,25 +124,25 @@ test.Y = Purchase[test]
 
 # set.seed(1)
 knn.pred = knn(train.X, test.X, train.Y, k = 1)
-mean(test.Y != knn.pred)  # ¿À·ù: 11.8%
+mean(test.Y != knn.pred)  # ì˜¤ë¥˜: 11.8%
 mean(test.Y != "No")      # !No: 5.9%
 # table(knn.pred, test.Y)
 
 knn.pred = knn(train.X, test.X, train.Y, k = 3)
-table(knn.pred, test.Y)   # Yes ¸ÂÃá È®·ü: 19.2%
+table(knn.pred, test.Y)   # Yes ë§ì¶˜ í™•ë¥ : 19.2%
 
 knn.pred = knn(train.X, test.X, train.Y, k = 5)
-table(knn.pred, test.Y)   # Yes ¸ÂÃá È®·ü: 26.7%
+table(knn.pred, test.Y)   # Yes ë§ì¶˜ í™•ë¥ : 26.7%
 
 
-# ±¸¸Å °¡´É¼º¿¡ ´ëÇÑ ±âÁØÁ¡ÀÌ 0.5°¡ ¾Æ´Ï¶ó
-# 0.25¸¦ ³ÑÀ¸¸é ±¸¸ÅÇÒ °¡´É¼ºÀÌ ³ô¾Æ¶ó°í ¾ê±âÇÏ°í ½ÍÀº °Í.
+# êµ¬ë§¤ ê°€ëŠ¥ì„±ì— ëŒ€í•œ ê¸°ì¤€ì ì´ 0.5ê°€ ì•„ë‹ˆë¼
+# 0.25ë¥¼ ë„˜ìœ¼ë©´ êµ¬ë§¤í•  ê°€ëŠ¥ì„±ì´ ë†’ì•„ë¼ê³  ì–˜ê¸°í•˜ê³  ì‹¶ì€ ê²ƒ.
 glm.fits = glm(Purchase ~., data = Caravan, family = binomial, subset =-test)
 glm.probs = predict(glm.fits, Caravan[test,], type = "response")
 glm.pred = rep("No", 1000)
 glm.pred[glm.probs > 0.5] = "Yes"
-table(glm.pred, test.Y)   # ¸»Çß´Ù½ÃÇÇ 0.5¸¦ ³Ñ´Â °ªÀº »ç½Ç»ó Á¸ÀçÇÏÁö ¾ÊÀ½. µû¶ó¼­ 0
+table(glm.pred, test.Y)   # ë§í–ˆë‹¤ì‹œí”¼ 0.5ë¥¼ ë„˜ëŠ” ê°’ì€ ì‚¬ì‹¤ìƒ ì¡´ì¬í•˜ì§€ ì•ŠìŒ. ë”°ë¼ì„œ 0
 
 glm.pred = rep("No", 1000)
 glm.pred[glm.probs > 0.25] = "Yes"
-table(glm.pred, test.Y)   # Yes ¸ÂÃá È®·ü: 33.3%
+table(glm.pred, test.Y)   # Yes ë§ì¶˜ í™•ë¥ : 33.3%
