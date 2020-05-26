@@ -4,7 +4,7 @@ library(MASS)
 library(ISLR) # (data) Boston, Carseats
 library(car)
 
-# write.csv(Boston, "boston", row.names = T, quote = F)
+# write.csv(Boston, "Boston.csv", row.names = T, quote = F)
 # fix(Boston)	# 새 창으로 데이터 형태 및 상태 확인
 
 lm.fit = lm(medv ~ lstat, data=Boston)		# attach(Boston);	lm.fit = lm(medv ~ lstat)
@@ -55,7 +55,7 @@ summary(lm.fit5)
 
 summary(lm(mdev ~ log(rm), data=Boston)
 
-# write.csv(Carseats, "carsearts", row.names = T, quote = F)
+# write.csv(Carseats, "Carsearts.csv", row.names = T, quote = F)
 
 lm.fit = lm(Sales ~.+Income:Advertising + Price:Age, data=Carseats)
 summary(lm.fit)
