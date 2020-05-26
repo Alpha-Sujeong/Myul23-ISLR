@@ -1,3 +1,11 @@
+# classify를 위해서 Bayes' Theoream을 이용, Bayes' Classifier를 구해야 함.
+# 이 때문에 LR, LDA, QDA, KNN 방법을 비교
+# LR: Normal, response: Yes or No
+# LDA: Gaussian(Multiple Normal), response: 2 cases
+# QDA: Normal, no Linear, response: 2개 이상
+# KNN: 1이거나 class level을 정해야 함, 선형일 때를 제외하고는 수준을 정했을 때가 이상적인 방법이긴 한데 다른 방법론에 비해 악, 최악이 걸릴 수준이 가능성이 높아서..
+
+
 # 예제를 통한 response classify prediction 함수 모음
 library(ISLR) # Smarket: Stock Market Data
 summary(Smarket)
