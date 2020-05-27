@@ -5,7 +5,8 @@
 
 자기 repo 설정 제일 아래 Danger Zone에서 Make this repository public 설정에 Make Public 버튼을 누르고 저장하면 됩니다.
 
-- 아니면, 보여주고 싶은 사람이 github이 있고 그 사람만 보여주고 싶으면, 다들 팀 권한을 마스터로 해놨으니 그 사람을 collaborater로 설정하면 됩니다. 이러면 현재 팀 설정이 collaborator는 read로 되어있으니 보는 것까지는 가능합니다.
+- 아니면, 보여주고 싶은 사람이 github이 있고 그 사람만 보여주고 싶으면, 다들 팀 권한을 마스터로 해놨으니
+그 사람을 collaborater로 설정하면 됩니다. 이러면 현재 팀 설정이 collaborator는 read로 되어있으니 보는 것까지는 가능합니다.
 ```
 
 지금 보고 있는 곳이 파일을 저장하는 곳.
