@@ -1,12 +1,12 @@
-# Best Subset SelectionÀ» À§ÇØ subset selection, regularization, dimension reduction
+# Best Subset Selectionì„ ìœ„í•´ subset selection, regularization, dimension reduction
 # subset selection: foward stepwise selection, backward stepwise selection, hybrid(or stepwise) selection
-# Cp(´Ü¼ø scaleÀÇ Ãß°¡°¡ AIC¶ó À¯»çÇÔ), BIC, Adjusted-R^2·Î ºñ±³ÇÏ´Âµ¥, BIC¸¦ Á¦ÀÏ ¼±È£ÇÔ.
+# Cp(ë‹¨ìˆœ scaleì˜ ì¶”ê°€ê°€ AICë¼ ìœ ì‚¬í•¨), BIC, Adjusted-R^2ë¡œ ë¹„êµí•˜ëŠ”ë°, BICë¥¼ ì œì¼ ì„ í˜¸í•¨.
 # regularization: ridge regression, the lasso
 # dimension reduction: pcr(pca regression, unsupervised) and pls
 # PLS (Partial Least Squares): supervised, first principal component is scaling sum
 
 
-# ¿¹Á¦¸¦ ÅëÇÑ subset selection ÇÔ¼ö ¸ğÀ½
+# ì˜ˆì œë¥¼ í†µí•œ subset selection í•¨ìˆ˜ ëª¨ìŒ
 library(ISLR) # data: Hitters
 
 # fix(Hitters)
@@ -19,18 +19,18 @@ dim(Hitters)
 # attach(Hitters)
 
 
-# best subset selection, sse·Î ÆÇ´Ü, lm°ú ºñ½Á, summary·Î È®ÀÎ.
+# best subset selection, sseë¡œ íŒë‹¨, lmê³¼ ë¹„ìŠ·, summaryë¡œ í™•ì¸.
 library(leaps)
 
 regfit.full = regsubsets(Salary~., Hitters, nvmax = 19)
-# ¸ğÇü º¯¼ö °¹¼ö 19°³·Î °íÁ¤
+# ëª¨í˜• ë³€ìˆ˜ ê°¯ìˆ˜ 19ê°œë¡œ ê³ ì •
 reg.summary = summary(regfit.full)
 names(reg.summary)
 
-# º¯¼ö Ãß°¡·Î Áõ°¡ÇÏ´Â rsq ÇÑ ´«¿¡ º¸±â
+# ë³€ìˆ˜ ì¶”ê°€ë¡œ ì¦ê°€í•˜ëŠ” rsq í•œ ëˆˆì— ë³´ê¸°
 reg.summary$rsq
 
-# ¿Í ÇÔ¼ö¿Í ÇÏ·Á´Â °Å Âü¾Ò´Ù..
+# ì™€ í•¨ìˆ˜ì™€ í•˜ë ¤ëŠ” ê±° ì°¸ì•˜ë‹¤..
 par(mfrow = c(2,2))
 plot(reg.summary$rss, xlab = "Number of Variables", ylab = "RSS", type = 'l')
 
@@ -46,7 +46,7 @@ plot(reg.summary$bic, xlab = "Number of Variables", ylab = "BIC", type = 'l')
 points(which.min(reg.summary$bic), reg.summary$bic[which.min(reg.summary$bic)],
        col = "red", cex = 2, pch = 20)
 
-# plotÀÇ ¿É¼ÇÀ¸·Î regsubsets¸¦ ½±°Ô Ç¥ÇöÇÒ ¼ö ÀÖÀ½.
+# plotì˜ ì˜µì…˜ìœ¼ë¡œ regsubsetsë¥¼ ì‰½ê²Œ í‘œí˜„í•  ìˆ˜ ìˆìŒ.
 # par(mfrow = c(2,2))
 # plot(regfit.full, scale = "r2")
 # plot(regfit.full, scale = "adjr2")
@@ -60,12 +60,12 @@ coef(regfit.full, which.min(reg.summary$bic))
 # Foward, Backward Stepwise Selection (FS, BE)
 regfit.fwd = regsubsets(Salary~., Hitters, nvmax = 19, method = "forward")
 summary(regfit.fwd)
-# ¾Æ ÀÌ°Å ÃÖ±Ù¿¡ ºÎ¸¥ º¯¼ö ºÎ¸£´Â º°Äª ÀÖ´Âµ¥, ±×°Å ¾²¸é ÆíÇÑµ¥.
+# ì•„ ì´ê±° ìµœê·¼ì— ë¶€ë¥¸ ë³€ìˆ˜ ë¶€ë¥´ëŠ” ë³„ì¹­ ìˆëŠ”ë°, ê·¸ê±° ì“°ë©´ í¸í•œë°.
 
 regfit.bwd = regsubsets(Salary~., Hitters, nvmax = 9, method = "backward")
 summary(regfit.bwd)
 
-# ±×³É °¢ subset selection¿¡¼­ ¾î¶² ¼ø¼­´ë·Î µé¾î¿Ô´ÂÁö º¸·Á°í Âï´Â °Å.
+# ê·¸ëƒ¥ ê° subset selectionì—ì„œ ì–´ë–¤ ìˆœì„œëŒ€ë¡œ ë“¤ì–´ì™”ëŠ”ì§€ ë³´ë ¤ê³  ì°ëŠ” ê±°.
 coef(regfit.full, 7)
 coef(regfit.fwd, 7)
 coef(regfit.bwd, 7)
@@ -74,7 +74,7 @@ coef(regfit.bwd, 7)
 # choose model using validation set or cross-validation
 # set.seed(1)
 train = sample(c(T, F), nrow(Hitters), rep = T)
-# HittersÀÇ Çà¼ö¸¸Å­ t,f ¹İº¹À¸·Î »ı¼º
+# Hittersì˜ í–‰ìˆ˜ë§Œí¼ t,f ë°˜ë³µìœ¼ë¡œ ìƒì„±
 test = (!train)
 
 regfit.best = regsubsets(Salary~., Hitters[train,], nvmax = 19)
@@ -88,9 +88,9 @@ for(i in 1:19) {
 }; rm(i)
 val.errors
 coef(regfit.best, which.min(val.errors))
-# ¾îÈÄ »ı°¢º¸´Ù beta_0¶û ¸î °³ È¸±Í°è¼ö°¡ Â÷ÀÌ°¡ ½ÉÇÏ³×, ±×¸®°í errorsÀÇ ÃÖ´ë°ªÀÌ º¯ÇØ¼­ º¸¿©ÁÖ´Â È¸±Í°è¼ö ¼öµµ ÀÚ²Ù º¯ÇÔ.
+# ì–´í›„ ìƒê°ë³´ë‹¤ beta_0ë‘ ëª‡ ê°œ íšŒê·€ê³„ìˆ˜ê°€ ì°¨ì´ê°€ ì‹¬í•˜ë„¤, ê·¸ë¦¬ê³  errorsì˜ ìµœëŒ€ê°’ì´ ë³€í•´ì„œ ë³´ì—¬ì£¼ëŠ” íšŒê·€ê³„ìˆ˜ ìˆ˜ë„ ìê¾¸ ë³€í•¨.
 
-# ÀÌ Á¤µµ¸é ±×³É predict ÇÔ¼ö ¸¸µé¾îÁà¶ó.
+# ì´ ì •ë„ë©´ ê·¸ëƒ¥ predict í•¨ìˆ˜ ë§Œë“¤ì–´ì¤˜ë¼.
 predict.regsubsets = function(object, newdata, id, ...) {
   form = as.formula(object$call[[2]])
   mat = model.matrix(form, newdata)
@@ -121,9 +121,9 @@ mean.cv.errors
 
 par(mfrow = c(1,1))
 plot(mean.cv.errors, type = 'b')
-# 11°³°¡ ÃÖ¼ÚÁ¡ÀÌ±ä ÇÏ³×.
+# 11ê°œê°€ ìµœì†Ÿì ì´ê¸´ í•˜ë„¤.
 
-# 11°³°¡ ÃÖ¼Ò¶ó coef È®ÀÎÇÏ°Ú´Ù´Â °Çµ¥, ±»ÀÌ ±×·² ÇÊ¿ä°¡.
+# 11ê°œê°€ ìµœì†Œë¼ coef í™•ì¸í•˜ê² ë‹¤ëŠ” ê±´ë°, êµ³ì´ ê·¸ëŸ´ í•„ìš”ê°€.
 # reg.best = regsubsets(Salary~., Hitters, nvmax = 19)
 # coef(reg.best, 11)
 
@@ -132,16 +132,16 @@ plot(mean.cv.errors, type = 'b')
 library(glmnet)
 
 x = model.matrix(Salary~., Hitters)[, -1]
-# modelÀÇ ¿¹Ãøº¯¼öµéÀ» ÀÚµ¿À¸·Î ¼öÄ¡È­(´õ¹ÌÈ­ Æ÷ÇÔ)ÇØ¼­ matrix·Î Ç¥Çö.
+# modelì˜ ì˜ˆì¸¡ë³€ìˆ˜ë“¤ì„ ìë™ìœ¼ë¡œ ìˆ˜ì¹˜í™”(ë”ë¯¸í™” í¬í•¨)í•´ì„œ matrixë¡œ í‘œí˜„.
 y = Hitters$Salary
 
-# ¿Í ¿ª½Ã ÇÁ·Î±×·¡¹ÖÀÌ Â¯ÀÌ¾ß alpha = 0ÀÌ¸é ridge°í, 1ÀÌ¸é lasso¾ß?
-# ´ë´ÜÇÏ´Ù, ÁøÂ¥ ¾îÁö°£È÷ ÇÏ³ª·Î ¸¸µé°í ½Í¾ú³ªº¸´Ù.
+# ì™€ ì—­ì‹œ í”„ë¡œê·¸ë˜ë°ì´ ì§±ì´ì•¼ alpha = 0ì´ë©´ ridgeê³ , 1ì´ë©´ lassoì•¼?
+# ëŒ€ë‹¨í•˜ë‹¤, ì§„ì§œ ì–´ì§€ê°„íˆ í•˜ë‚˜ë¡œ ë§Œë“¤ê³  ì‹¶ì—ˆë‚˜ë³´ë‹¤.
 
 grid = 10^seq(10, -2, length = 100)
 ridge.mod = glmnet(x, y, alpha = 0, lambda = grid)
-# ¿ø·¡¶ó¸é ÇÔ¼ö°¡ ÀÚµ¿À¸·Î lambda¸¦ ¼³Á¤Çß°ÚÁö¸¸, Áö±İÀº °­Á¦ÀûÀ¸·Î grid ¿µ¿ª ¾È¿¡¼­ Ã£À¸¶ó°í ¼³Á¤ÇÔ.
-# ¶Ç glmnet ÇÔ¼ö´Â ÀÚµ¿À¸·Î Ç¥ÁØÈ­ÇØ¼­ »ç¿ëÇÏ¹Ç·Î, ÀÌ ±â´ÉÀÌ ÇÊ¿ä¾ø´Ù¸é standardize = F¸¦ ÇÏÀÚ.
+# ì›ë˜ë¼ë©´ í•¨ìˆ˜ê°€ ìë™ìœ¼ë¡œ lambdaë¥¼ ì„¤ì •í–ˆê² ì§€ë§Œ, ì§€ê¸ˆì€ ê°•ì œì ìœ¼ë¡œ grid ì˜ì—­ ì•ˆì—ì„œ ì°¾ìœ¼ë¼ê³  ì„¤ì •í•¨.
+# ë˜ glmnet í•¨ìˆ˜ëŠ” ìë™ìœ¼ë¡œ í‘œì¤€í™”í•´ì„œ ì‚¬ìš©í•˜ë¯€ë¡œ, ì´ ê¸°ëŠ¥ì´ í•„ìš”ì—†ë‹¤ë©´ standardize = Fë¥¼ í•˜ì.
 
 # dim(coef(ridge.mod))
 ridge.mod$lambda[50]
@@ -151,7 +151,7 @@ sqrt(sum(coef(ridge.mod)[-1, 50]^2))
 ridge.mod$lambda[60]
 coef(ridge.mod)[, 60]
 sqrt(sum(coef(ridge.mod)[-1, 60]^2))
-# È®½ÇÈ÷ lambda°¡ Ä¿Áö´Ï±î coef°¡ ÀÛ¾ÆÁö±ä ÇÏ³×.
+# í™•ì‹¤íˆ lambdaê°€ ì»¤ì§€ë‹ˆê¹Œ coefê°€ ì‘ì•„ì§€ê¸´ í•˜ë„¤.
 
 predict(ridge.mod, s = 50, type = "coefficients")[1:20,]
 
@@ -173,8 +173,8 @@ ridge.pred = predict(ridge.mod, s = 1e10, newx = x[test,])
 mean((ridge.pred - y.test)^2)
 
 ridge.pred = predict(ridge.mod, s = 0, newx = x[test,])
-# ¿ø·¡¶ó¸é s¸¦ ¿Ïº®ÇÏ°Ô 0¿¡ ¸ÂÃß´Â ¿É¼ÇÀÌ¾ú´ø °Å °°Àºµ¥
-# x¿Í y¿¡ Á¶Á¤À» ÇØ¾ß ÇÏ´ÂÁö ¾ÈµÈ´Ù°í ÇÏ³×.
+# ì›ë˜ë¼ë©´ së¥¼ ì™„ë²½í•˜ê²Œ 0ì— ë§ì¶”ëŠ” ì˜µì…˜ì´ì—ˆë˜ ê±° ê°™ì€ë°
+# xì™€ yì— ì¡°ì •ì„ í•´ì•¼ í•˜ëŠ”ì§€ ì•ˆëœë‹¤ê³  í•˜ë„¤.
 mean((ridge.pred - y.test)^2)
 
 lm(y ~ x, subset = train)
@@ -185,22 +185,22 @@ cv.out = cv.glmnet(x[train,], y[train], alpha = 0)
 plot(cv.out)
 bestlam = cv.out$lambda.min
 bestlam
-# ÃÖÀû ridgeÀÇ lambda ¹üÀ§¸¦ ¸ğ¾Æ´Ù ÃÖ¼Ú°ªÀ» °¡Á®¿Â °Çµ¥, ¿Ö seed°¡ ÇÊ¿äÇÒ±î.
-# ³»ºÎÀûÀ¸·Î lambda¸¦ Ã£À» ¶§ resampling¸¦ »ç¿ëÇÏ´Â °Ç°¡.
+# ìµœì  ridgeì˜ lambda ë²”ìœ„ë¥¼ ëª¨ì•„ë‹¤ ìµœì†Ÿê°’ì„ ê°€ì ¸ì˜¨ ê±´ë°, ì™œ seedê°€ í•„ìš”í• ê¹Œ.
+# ë‚´ë¶€ì ìœ¼ë¡œ lambdaë¥¼ ì°¾ì„ ë•Œ resamplingë¥¼ ì‚¬ìš©í•˜ëŠ” ê±´ê°€.
 
 ridge.pred = predict(ridge.mod, s = bestlam, newx = x[test,])
 mean((ridge.pred - y.test)^2)
 
-# lambda ±¸¿ªÀ» ¼³Á¤ÇÏÁö ¾ÊÀº ÀûÇÕÀ» ÇØº¸ÀÚ.
+# lambda êµ¬ì—­ì„ ì„¤ì •í•˜ì§€ ì•Šì€ ì í•©ì„ í•´ë³´ì.
 out = glmnet(x, y, alpha = 0)
 predict(out, type = "coefficients", s = bestlam)[1:20,]
-# Á¤¸» ridge´Â º¯¼ö¸¦ ¹ö¸± »ı°¢À» ÇÏÁö ¾Ê´Â±¸³ª.
+# ì •ë§ ridgeëŠ” ë³€ìˆ˜ë¥¼ ë²„ë¦´ ìƒê°ì„ í•˜ì§€ ì•ŠëŠ”êµ¬ë‚˜.
 
 
 # The Lasso
 lasso.mod = glmnet(x[train,], y[train], alpha = 1, lambda = grid)
 plot(lasso.mod)
-# ¿Í¿ì. ´©°¡ ¼± ±ß´Ù°¡ ½Ç¼öÇÑ °ÍÃ³·³ ¿©±âÀú±â ¸· ³ª°¡³×.
+# ì™€ìš°. ëˆ„ê°€ ì„  ê¸‹ë‹¤ê°€ ì‹¤ìˆ˜í•œ ê²ƒì²˜ëŸ¼ ì—¬ê¸°ì €ê¸° ë§‰ ë‚˜ê°€ë„¤.
 
 # set.seed(1)
 cv.out = cv.glmnet(x[train,], y[train], alpha = 1)
@@ -209,12 +209,12 @@ plot(cv.out)
 bestlam = cv.out$lambda.min
 lasso.pred = predict(lasso.mod, s = bestlam, newx = x[test,])
 mean((lasso.pred - y.test)^2)
-# È®½ÇÈ÷ ridge¶û ºñ½ÁÇÑ °ªÀÎ °Ç¸¸ ¾Ë°ÚÀ½.
+# í™•ì‹¤íˆ ridgeë‘ ë¹„ìŠ·í•œ ê°’ì¸ ê±´ë§Œ ì•Œê² ìŒ.
 
 out = glmnet(x, y , alpha = 1, lambda = grid)
 lasso.coef = predict(out, type = "coefficients", s = bestlam)[1:20,]
 lasso.coef
-# ¿À È®½ÇÈ÷ 0ÀÎ °Ç ÀÖ³×. ·£´ı¼º¿¡ ÀÇÇØ 12°³°¡ 0ÀÎ °Ç ¾Æ´ÏÁö¸¸.
+# ì˜¤ í™•ì‹¤íˆ 0ì¸ ê±´ ìˆë„¤. ëœë¤ì„±ì— ì˜í•´ 12ê°œê°€ 0ì¸ ê±´ ì•„ë‹ˆì§€ë§Œ.
 
 
 
@@ -223,19 +223,19 @@ library(pls)
 
 # set.seed(2)
 pcr.fit = pcr(Salary~., data = Hitters, scale = T, validation = "CV")
-# Á¶°ÇÀÌ ¸¹Àº lm, ¾ê´Â data¸¦ ½áÁà¾ß ÀÎ½ÄÇÏ´Â ¾à°£ poorÇÑ ÇÔ¼ö´Ù.
+# ì¡°ê±´ì´ ë§ì€ lm, ì–˜ëŠ” dataë¥¼ ì¨ì¤˜ì•¼ ì¸ì‹í•˜ëŠ” ì•½ê°„ poorí•œ í•¨ìˆ˜ë‹¤.
 summary(pcr.fit)
-# ¸®½ºÆ® Ã¹¹øÂ° Ç×¸ñÀº EDA¿¡¼­ ¹è¿î CV°¡ ¸Â´Â°¡?
-# variation º¸´Â °Ô ¸®½ºÆ® µÎ¹ø¤Š Ç×¸ñÀÌ¿´´Ù.
+# ë¦¬ìŠ¤íŠ¸ ì²«ë²ˆì§¸ í•­ëª©ì€ EDAì—ì„œ ë°°ìš´ CVê°€ ë§ëŠ”ê°€?
+# variation ë³´ëŠ” ê²Œ ë¦¬ìŠ¤íŠ¸ ë‘ë²ˆÂŠ í•­ëª©ì´ì˜€ë‹¤.
 
 validationplot(pcr.fit, val.type = "MSEP")
-# ¿ÀÈ« pca ¶§ÀÇ ±× e.v º¸´Â ±× ÇÔ¼ö °°³×.
+# ì˜¤í™ pca ë•Œì˜ ê·¸ e.v ë³´ëŠ” ê·¸ í•¨ìˆ˜ ê°™ë„¤.
 
 # set.seed(1)
 pcr.fit = pcr(Salary~., data = Hitters, subset = train, scale = T, validation = "CV")
 validationplot(pcr.fit, val.type = "MSEP")
 
-# pc°¡ 7°³ÀÏ ¶§ 90%À» ³ÑÀº °É º¸°í 7À» ¼±ÅÃÇÑ µí º¸ÀÓ.
+# pcê°€ 7ê°œì¼ ë•Œ 90%ì„ ë„˜ì€ ê±¸ ë³´ê³  7ì„ ì„ íƒí•œ ë“¯ ë³´ì„.
 pcr.pred = predict(pcr.fit, x[test,], ncomp = 7)
 mean((pcr.pred - y.test)^2)
 
@@ -246,11 +246,11 @@ summary(pcr.fit)
 # PLS
 # set.seed(1)
 pls.fit = plsr(Salary~., data = Hitters, subset = train, scale = T, validation = "CV")
-# ¾êµµ data´Â data=À¸·Î ½á¾ß ÇÏ´Â poorÇÑ ÇÔ¼ö±º¿ä.
+# ì–˜ë„ dataëŠ” data=ìœ¼ë¡œ ì¨ì•¼ í•˜ëŠ” poorí•œ í•¨ìˆ˜êµ°ìš”.
 summary(pls.fit)
 validationplot(pls.fit, val.type = "MSEP")
 
-# validation ±×¸²ÀÌ pc¸¦ 2·Î ÇÏ´Â °Ô ÀûÁ¤ÀÓÀ» º¸¿©ÁÜ.
+# validation ê·¸ë¦¼ì´ pcë¥¼ 2ë¡œ í•˜ëŠ” ê²Œ ì ì •ì„ì„ ë³´ì—¬ì¤Œ.
 pls.pred = predict(pls.fit, x[test,], ncomp = 2)
 mean((pls.pred - y.test)^2)
 
