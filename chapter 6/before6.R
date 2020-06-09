@@ -226,7 +226,7 @@ pcr.fit = pcr(Salary~., data = Hitters, scale = T, validation = "CV")
 # 조건이 많은 lm, 얘는 data를 써줘야 인식하는 약간 poor한 함수다.
 summary(pcr.fit)
 # 리스트 첫번째 항목은 EDA에서 배운 CV가 맞는가?
-# variation 보는 게 리스트 두번 항목이였다.
+# variation 보는 게 리스트 두번째 항목이였다.
 
 validationplot(pcr.fit, val.type = "MSEP")
 # 오홍 pca 때의 그 e.v 보는 그 함수 같네.
