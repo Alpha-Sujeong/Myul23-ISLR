@@ -36,7 +36,7 @@ summary(gam.m3)
 # local regression의 이용
 gam.lo.i = gam(wage ~ s(year, df = 4) + lo(age, span = 0.7) + education)
 
-library(akima)
+# library(akima)
 # 2차원 표면 plot
 plot(gam.lo.i)
 
