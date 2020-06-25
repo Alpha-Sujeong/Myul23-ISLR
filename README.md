@@ -2,7 +2,8 @@
 
 ```
 만약에 자신의 repo~를 링크로 다른 사람한테 보여주고 싶다면,<br />
-자기 repo 설정 제일 아래 Danger Zone에서 Make this repository public 설정에 Make Public 버튼을 누르고 저장하면 됨.
+자기 repo 설정 제일 아래 Danger Zone에서<br />
+Make this repository public 설정에 Make Public 버튼을 누르고 저장하면 됨.
 
 - 아니면, 보여주고 싶은 사람이 github이 있고 그 사람만 보여주고 싶으면,
 다들 팀 권한을 마스터로 해놨으니 그 사람을 collaborater로 설정하면 됩니다.
