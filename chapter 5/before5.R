@@ -1,5 +1,5 @@
-# Cross-Validation: 원래 데이터를 랜덤하게 같은 양의 두 그룹으로 나눈 것. training, test으로 불리며 training으로 선정된 데이터에 너무 의존함.
-# 이 때문에 CV를 반복하는 게 낫다 생각하게 됨.
+# Validation set Approach: 원래 데이터를 랜덤하게 같은 양의 두 그룹으로 나눈 것. training, test으로 불리며 training으로 선정된 데이터에 너무 의존함.
+# Cross-Validation: 이 때문에 CV를 반복하는 게 낫다 생각하게 됨.
 # LOOCV (Leave-One-Out Cross-Validation): n개에서 계속 하나를 제거해서 CV하고 모델 평가값을 구하기를 반복.
 # k-fold CV (k-Fold Cross-Validation): 전체를 동일 갯수의 k로 나누어 그 중 하나를 test로 나머지를 training으로 해서 모델 평가값을 구하기를 반복.
 # Bootstrap: 주어진 데이터를 랜덤 복원으로 뽑은 (각기 다른) 데이터를 만들어 이를 샘플 삼아 반복.
