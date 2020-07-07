@@ -8,7 +8,7 @@ knitr::opts_chunk$set(echo = T)
 ```
 
 ### pre-requires
-``` {r include = F}
+```{r include = F}
 ## library(MASS)
 library(car)    ## vif()
 data(Boston, package = "MASS")
@@ -16,20 +16,20 @@ data(Carseats, package = "ISLR")
 ```
 
 store unique data sets.
-``` {r eval = F}
+```{r eval = F}
 write.csv(Boston, "Boston.csv", row.names = F, quote = F)
 write.csv(Carseats, "Carseats.csv", row.names = T, quote = F)
 ```
 ---
 ### 1. Simple Linear Regression
 data checking 
-``` {r}
+```{r}
 ## fix(Boston)
 names(Boston)
 ```
 > fix( ): whole check for data set
 
-``` {r}
+```{r}
 lm.fit = lm(medv ~ lstat, data = Boston)
 ## attach(Boston);	lm.fit = lm(medv ~ lstat)
 summary(lm.fit);	summary(lm.fit)$r.sq;	summary(lm.fit)$sigma
@@ -37,12 +37,12 @@ summary(lm.fit);	summary(lm.fit)$r.sq;	summary(lm.fit)$sigma
 ```
 confint(lm.fit): coefficient 2.5, 97.5 percentile value
 
-``` {r}
+```{r}
 predict(lm.fit, data.frame(lstat = c(5,10,15)), interval = "confidence")
 predict(lm.fit, data.frame(lstat = c(5,10,15)), interval = "prediction")
 ```
 
-``` {r}
+```{r}
 plot(Boston$lstat, Boston$medv)
 abline(lm.fit)
 ## abline(lm.fit, lwd = 3);         abline(lm.fit, lwd = 3, col = "red")
@@ -50,7 +50,7 @@ abline(lm.fit)
 ## plot(lstat, medv, pch = "+");	plot(1:20, 1:20, pch = 1:20)
 ```
 
-``` {r}
+```{r}
 par(mfrow = c(2,2))
 plot(lm.fit)
 ```
@@ -63,7 +63,7 @@ plot(predict(lm.fit), rstudent(lm.fit))
 plot(hatvalues(lm.fit))
 ```
 
-``` {r}
+```{r}
 which.max(hatvalues(lm.fit))
 ```
 > which.max( ): return maximum data
@@ -71,18 +71,18 @@ which.max(hatvalues(lm.fit))
 
 ---
 ### 2. Multiple Linear Regression
-``` {r}
+```{r}
 lm.fit = lm(medv ~ lstat + age, data = Boston)
 summary(lm.fit)
 ## lm.fit = lm(medv ~, data = Boston)
 ## summary(lm.fit)
 ```
 
-``` {r}
+```{r}
 vif(lm.fit)
 ```
 
-``` {r}
+```{r}
 lm.fit1 = lm(medv ~. - age, data = Boston)
 ## lm.fit1 = update(lm.fit, ~.-age)
 summary(lm.fit1)
@@ -91,7 +91,7 @@ summary(lm.fit1)
 
 ---
 ### 3. Interaction Term
-``` {r}
+```{r}
 summary(lm(medv ~ lstat*age, data = Boston))
 ```
 - '*' means adding all (two) variables and interaction term
@@ -99,48 +99,48 @@ summary(lm(medv ~ lstat*age, data = Boston))
 
 ---
 ### 4. Non-linear Transormations of the Predictors
-``` {r}
+```{r}
 lm.fit2 = lm(medv ~ lstat + I(lstat^2), data = Boston)
 summary(lm.fit2)
 ```
 represent two-square term through '^', 'I( )'
 
-``` {r}
+```{r}
 par(mfrow = c(2,2))
 plot(lm.fit2)
 ```
 
 ##### compare with normal and quadratic
-``` {r}
+```{r}
 lm.fit = lm(medv ~ lstat, data = Boston)
 anova(lm.fit, lm.fit2)
 ```
 
 ##### 5-degree poly
-``` {r}
+```{r}
 lm.fit5 = lm(medv ~ poly(lstat, 5), data = Boston)
 summary(lm.fit5)
 ```
 
 ##### log
-``` {r}
+```{r}
 summary(lm(medv ~ log(rm), data = Boston))
 ```
 
 ---
 ### 5. Qualitative Predictors
 data checking 
-``` {r}
+```{r}
 ## fix(Carseats)
 names(Carseats)
 ```
 
-``` {r}
+```{r}
 lm.fit = lm(Sales ~. + Income:Advertising + Price:Age, data = Carseats)
 summary(lm.fit)
 ```
 
-``` {r eval = F}
+```{r eval = F}
 contrasts(Carseats$ShelveLoc)
 ```
 > contrasts( ): making dummy variables
