@@ -1,0 +1,250 @@
+---
+title: "4. Classification"
+output: github_document
+---
+
+```{r setup, include = F}
+knitr::opts_chunk$set(echo = T, fig.align = "center")
+```
+
+### pre-requires
+```{r include = F}
+library(MASS)   # lda()
+library(class)  # knn()
+data(Smarket, package = "ISLR")
+attach(Smarket)
+```
+Smarket: Stock Market Data
+
+```{r}
+cor(Smarket[,-9])
+pairs(Smarket)
+plot(Smarket$Volume)
+```
+
+store unique data sets.
+```{r eval = F}
+write.csv(Smarket, "Smarket.csv", row.names = F, quote = F)
+```
+
+classify를 위해서 Bayes' Theoream을 이용, Bayes' Classifier를 구해야 함.<br />
+이 때문에 LR, LDA, QDA, KNN 방법을 비교
+
+- LR: 회귀 기본 가정, logit을 통해 response을 [0,1]로 제한하는 방법
+- LDA: Gaussian(Multiple Normal), response를 선형 분리, 파이 값 정해야 함.(p = 1, 등분산 -> LR과 같음)
+- QDA: Normal, no Linear, respnse를 곡선으로 분리
+- KNN: 1이거나 class level을 정해야 함, 선형일 때를 제외하고는 수준을 정했을 때가 이상적인 방법이긴 한데, 다른 방법론에 비해 악, 최악이 걸릴 수준이 가능성이 높음.
+
+---
+
+### 1. Logistic Regression
+
+```{r}
+glm.fits = glm(Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, family = binomial)
+summary(glm.fits)
+## coef(glm.fits;  summary(glm.fits)$coef; summary(glm.gits)$coef[,4]
+```
+
+```{r}
+glm.probs = predict(glm.fits, type = "response")
+## glm.probs[1:10]
+contrasts(Direction)
+```
+comprehensive(overall) evaluation for direction, qualitative response variable
+
+```{r include = F}
+glm.pred = rep("Down", 1250)
+glm.pred[glm.probs > 0.5] = "Up"
+```
+
+```{r}
+table(glm.pred, Direction)
+mean(glm.pred == Direction)
+```
+on first test, it observed 52.2%
+
+on train data
+```{r include = F}
+train = (Year < 2005)
+Smarket.2005 = Smarket[!train,]
+dim(Smarket.2005)
+Direction.2005 = Direction[!train]
+```
+
+##### train data on all variables
+```{r include = F}
+glm.fits = glm(Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, family = binomial, subset = train)
+glm.probs = predict(glm.fits, Smarket.2005, type = "response")
+glm.pred = rep("Down", 252)
+glm.pred[glm.probs > 0.5] = "Up"
+```
+
+```{r}
+table(glm.pred, Direction.2005)
+mean(glm.pred == Direction.2005)
+```
+on first test, it observed 48%
+
+##### train data on 2 variables
+```{r include = F}
+glm.fits = glm(Direction ~ Lag1 + Lag2, family = binomial, subset = train)
+glm.probs = predict(glm.fits, Smarket.2005, type = "response")
+glm.pred = rep("Down", 252)
+glm.pred[glm.probs > 0.5] = "Up"
+```
+
+```{r}
+table(glm.pred, Direction.2005)
+mean(glm.pred == Direction.2005)
+```
+on first test, it observed 56%
+
+also, choose second model using two variables 
+```{r}
+predict(glm.fits, newdata = data.frame(Lag1 = c(1.2, 1.5), Lag2 = c(1.1, -0.8)), type = "response")
+```
+
+---
+
+### 2. LDA: Linear Discriminant Analysis
+
+```{r}
+lda.fit = lda(Direction ~ Lag1 + Lag2, subset = train)
+lda.fit
+```
+on first test, $phi_1$ = 0.492, $phi_2$ = 0.508
+
+```{r include = F}
+lda.pred = predict(lda.fit, Smarket.2005)
+## names(lda.pred)
+```
+
+```{r}
+lda.class = lda.pred$class
+table(lda.class, Direction.2005)
+mean(lda.class == Direction.2005)
+```
+on first test, it observed 56%
+
+```{r}
+sum(lda.pred$posterior[,1] >= .5)
+sum(lda.pred$posterior[,1] < 0.5)
+```
+relate with market growth decrease and post-prob on model
+
+```{r}
+## lda.pred$posterior[1:20,1]
+## lda.class[1:20]
+sum(lda.pred$posterior[,1] > 0.9)
+```
+
+---
+
+### 3. QDA: Quadratic Discriminant Analysis
+
+```{r}
+qda.fit = qda(Direction ~ Lag1 + Lag2, subset = train)
+qda.fit
+```
+
+```{r}
+qda.class = predict(qda.fit, Smarket.2005)$class
+table(qda.class, Direction.2005)
+mean(qda.class == Direction.2005)
+```
+on first test, it observed 59.9%
+
+---
+
+### 4. KNN: K-Nearest Neightbors
+
+train data
+```{r include = F}
+train.X = cbind(Lag1, Lag2)[train,]
+test.X = cbind(Lag1, Lag2)[!train,]
+train.Direction = Direction[train]
+```
+
+```{r}
+## set.seed(1)
+knn.pred = knn(train.X, test.X, train.Direction, k = 1)
+table(knn.pred, Direction.2005)
+mean(knn.pred == Direction.2005)
+```
+on first test, it observed 50%
+
+```{r}
+knn.pred = knn(train.X, test.X, train.Direction, k = 3)
+table(knn.pred, Direction.2005)
+mean(knn.pred == Direction.2005)
+```
+on first test, it observed 53.6%
+
+### add) Caravan data
+
+```{r include = F}
+data(Caravan, package = "ISLR")
+attach(Caravan)
+```
+summary(Purchase): No: 0.0598
+
+```{r}
+var(Caravan[,1]); var(Caravan[,2])
+standardized.X = scale(Caravan[,-86])
+```
+
+##### test data set
+```{r include = F}
+test = 1:1000
+train.X = standardized.X[-test,]
+test.X = standardized.X[test,]
+train.Y = Purchase[-test]
+test.Y = Purchase[test]
+```
+
+```{r include = F}
+## set.seed(1)
+knn.pred = knn(train.X, test.X, train.Y, k = 1)
+```
+
+```{r}
+mean(test.Y != knn.pred)
+mean(test.Y != "No")
+## table(knn.pred, test.Y)
+```
+- miss ratio: 11.8%
+- miss ratio: 5.9%
+
+```{r include = F}
+knn.pred = knn(train.X, test.X, train.Y, k = 3)
+```
+
+```{r}
+table(knn.pred, test.Y)
+```
+on first test, it observed 19.2%
+
+```{r}
+knn.pred = knn(train.X, test.X, train.Y, k = 5)
+table(knn.pred, test.Y)
+```
+on first test, it observed 26.7%
+
+```{r include = F}
+glm.fits = glm(Purchase ~., data = Caravan, family = binomial, subset =-test)
+glm.probs = predict(glm.fits, Caravan[test,], type = "response")
+glm.pred = rep("No", 1000)
+glm.pred[glm.probs > 0.5] = "Yes"
+```
+구매 가능성에 대한 기준점이 0.5가 아니라 0.25를 넘으면 구매할 가능성이 높아라고 얘기하고 싶은 것.<br />
+말했다시피 0.5를 넘는 값은 사실상 존재하지 않음. 따라서 0
+
+```{r include = F}
+glm.pred = rep("No", 1000)
+glm.pred[glm.probs > 0.25] = "Yes"
+```
+
+```{r}
+table(glm.pred, test.Y)
+```
+on first test, it observed 33.3%
