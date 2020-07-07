@@ -4,7 +4,7 @@ output: github_document
 ---
 
 ```{r setup, include = F}
-knitr::opts_chunk$set(echo = T)
+knitr::opts_chunk$set(echo = T, fig.align = "center")
 ```
 
 ### pre-requires
@@ -20,8 +20,11 @@ store unique data sets.
 write.csv(Boston, "Boston.csv", row.names = F, quote = F)
 write.csv(Carseats, "Carseats.csv", row.names = T, quote = F)
 ```
+
 ---
+
 ### 1. Simple Linear Regression
+
 data checking 
 ```{r}
 ## fix(Boston)
@@ -50,12 +53,12 @@ abline(lm.fit)
 ## plot(lstat, medv, pch = "+");	plot(1:20, 1:20, pch = 1:20)
 ```
 
-```{r}
+```{r fig.width = 10, fig.height = 8}
 par(mfrow = c(2,2))
 plot(lm.fit)
 ```
 
-```{r}
+```{r fig.width = 10}
 par(mfrow = c(1,3))
 plot(predict(lm.fit), residuals(lm.fit))
 plot(predict(lm.fit), rstudent(lm.fit))
@@ -68,9 +71,10 @@ which.max(hatvalues(lm.fit))
 ```
 > which.max( ): return maximum data
 
-
 ---
+
 ### 2. Multiple Linear Regression
+
 ```{r}
 lm.fit = lm(medv ~ lstat + age, data = Boston)
 summary(lm.fit)
@@ -90,7 +94,9 @@ summary(lm.fit1)
 > update( ): literally update (fit) function
 
 ---
+
 ### 3. Interaction Term
+
 ```{r}
 summary(lm(medv ~ lstat*age, data = Boston))
 ```
@@ -98,14 +104,16 @@ summary(lm(medv ~ lstat*age, data = Boston))
 - ':' means adding first variable and interaction term
 
 ---
+
 ### 4. Non-linear Transormations of the Predictors
+
 ```{r}
 lm.fit2 = lm(medv ~ lstat + I(lstat^2), data = Boston)
 summary(lm.fit2)
 ```
 represent two-square term through '^', 'I( )'
 
-```{r}
+```{r fig.width = 10, fig.height = 8}
 par(mfrow = c(2,2))
 plot(lm.fit2)
 ```
@@ -128,7 +136,9 @@ summary(lm(medv ~ log(rm), data = Boston))
 ```
 
 ---
+
 ### 5. Qualitative Predictors
+
 data checking 
 ```{r}
 ## fix(Carseats)
