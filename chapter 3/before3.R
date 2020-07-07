@@ -7,19 +7,20 @@ library(car)
 # write.csv(Boston, "Boston.csv", row.names = T, quote = F)
 # fix(Boston)	# 새 창으로 데이터 형태 및 상태 확인
 
-lm.fit = lm(medv ~ lstat, data=Boston)		# attach(Boston);	lm.fit = lm(medv ~ lstat)
+lm.fit = lm(medv ~ lstat, data = Boston)		# attach(Boston);	lm.fit = lm(medv ~ lstat)
 summary(lm.fit);	summary(lm.fit)$r.sq;	summary(lm.fit)$sigma
 # names(lm.fit);	coef(lm.fit);	confint(lm.fit): 회귀변수 2.5, 97.5 백분위수 값
 
-predict(lm.fit, data.frame(lstat=c(5,10,15)), interval="confidence")
-predict(lm.fit, data.frame(lstat=c(5,10,15)), interval="prediction")
+predict(lm.fit, data.frame(lstat = c(5,10,15)), interval = "confidence")
+predict(lm.fit, data.frame(lstat = c(5,10,15)), interval = "prediction")
 
 plot(lstat, medv)
 
 abline(lm.fit)
-# abline(lm.fit, lwd=3);	abline(lm.fit, lwd=3, col="red")
-# plot(lstat, medv, col="red");	plot(lstat, medv, pch=20);	plot(lstat, medv, pch="+");	plot(1:20, 1:20, pch=1:20)
-par(mfrow=c(2,2))
+# abline(lm.fit, lwd = 3);	abline(lm.fit, lwd = 3, col = "red")
+# plot(lstat, medv, col = "red");	plot(lstat, medv, pch = 20);
+# plot(lstat, medv, pch = "+");	plot(1:20, 1:20, pch=1:20)
+par(mfrow = c(2,2))
 plot(lm.fit)
 
 plot(predict(lm.fit), residuals(lm.fit))
@@ -30,7 +31,7 @@ which.max(hatvalues(lm.fit));	# 데이터 중 가장 큰 값을 반환.
 
 lm.fit = lm(medv ~ lstat + age, data=Boston)
 summary(lm.fit)
-# lm.fit = lm(medv ~, data=Boston);	summary(lm.fit)
+# lm.fit = lm(medv ~, data = Boston);	summary(lm.fit)
 
 # library(car)
 vif(lm.fit)
@@ -53,11 +54,11 @@ plot(lm.fit2)
 lm.fit5 = lm(medv ~ poly(lstat, 5))
 summary(lm.fit5)
 
-summary(lm(mdev ~ log(rm), data=Boston)
+summary(lm(mdev ~ log(rm), data = Boston)
 
 # write.csv(Carseats, "Carsearts.csv", row.names = T, quote = F)
 
-lm.fit = lm(Sales ~.+Income:Advertising + Price:Age, data=Carseats)
+lm.fit = lm(Sales ~.+Income:Advertising + Price:Age, data = Carseats)
 summary(lm.fit)
 
 # attach(Carseats)
