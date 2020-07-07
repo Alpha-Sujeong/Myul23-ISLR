@@ -4,7 +4,7 @@ output: github_document
 ---
 
 ```{r setup, include = F}
-knitr::opts_chunk$set(echo = T)
+knitr::opts_chunk$set(echo = T, fig.align = "center")
 ```
 
 ### pre-requires
@@ -45,7 +45,7 @@ predict(lm.fit, data.frame(lstat = c(5,10,15)), interval = "confidence")
 predict(lm.fit, data.frame(lstat = c(5,10,15)), interval = "prediction")
 ```
 
-```{r fig.align = "center"}
+```{r}
 plot(Boston$lstat, Boston$medv)
 abline(lm.fit)
 ## abline(lm.fit, lwd = 3);         abline(lm.fit, lwd = 3, col = "red")
