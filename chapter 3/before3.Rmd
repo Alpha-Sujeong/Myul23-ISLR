@@ -1,6 +1,8 @@
 ---
 title: "3. Linear Regression"
-output: html_document
+output:
+    github_document:
+        hard_line_breaks: false
 ---
 
 ```{r setup, include = F}
