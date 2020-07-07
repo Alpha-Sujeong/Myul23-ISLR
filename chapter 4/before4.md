@@ -1,6 +1,16 @@
 4\. Classification
 ================
 
+classify를 위해서 Bayes’ Theoream을 이용, Bayes’ Classifier를 구해야 함.<br /> 이 때문에
+LR, LDA, QDA, KNN 방법을 비교
+
+  - LR: 회귀 기본 가정, logit을 통해 response을 \[0,1\]로 제한하는 방법
+  - LDA: Gaussian(Multiple Normal), response를 선형 분리, 파이 값 정해야 함.(p = 1,
+    등분산 -\> LR과 같음)
+  - QDA: Normal, no Linear, respnse를 곡선으로 분리
+  - KNN: 1이거나 class level을 정해야 함, 선형일 때를 제외하고는 수준을 정했을 때가 이상적인 방법이긴 한데,
+    다른 방법론에 비해 악, 최악이 걸릴 수준이 가능성이 높음.
+
 ### pre-requires
 
 Smarket: Stock Market Data
@@ -45,16 +55,6 @@ store unique data sets.
 ``` r
 write.csv(Smarket, "Smarket.csv", row.names = F, quote = F)
 ```
-
-classify를 위해서 Bayes’ Theoream을 이용, Bayes’ Classifier를 구해야 함.<br /> 이 때문에
-LR, LDA, QDA, KNN 방법을 비교
-
-  - LR: 회귀 기본 가정, logit을 통해 response을 \[0,1\]로 제한하는 방법
-  - LDA: Gaussian(Multiple Normal), response를 선형 분리, 파이 값 정해야 함.(p = 1,
-    등분산 -\> LR과 같음)
-  - QDA: Normal, no Linear, respnse를 곡선으로 분리
-  - KNN: 1이거나 class level을 정해야 함, 선형일 때를 제외하고는 수준을 정했을 때가 이상적인 방법이긴 한데,
-    다른 방법론에 비해 악, 최악이 걸릴 수준이 가능성이 높음.
 
 -----
 
@@ -126,7 +126,7 @@ mean(glm.pred == Direction)
 
 on first test, it observed 52.2%
 
-on train data
+#### on train data
 
 ##### train data on all variables
 
@@ -314,16 +314,18 @@ table(knn.pred, Direction.2005)
 
     ##         Direction.2005
     ## knn.pred Down Up
-    ##     Down   48 55
-    ##     Up     63 86
+    ##     Down   48 54
+    ##     Up     63 87
 
 ``` r
 mean(knn.pred == Direction.2005)
 ```
 
-    ## [1] 0.531746
+    ## [1] 0.5357143
 
 on first test, it observed 53.6%
+
+-----
 
 ### add) Caravan data
 
@@ -347,7 +349,7 @@ standardized.X = scale(Caravan[,-86])
 mean(test.Y != knn.pred)
 ```
 
-    ## [1] 0.115
+    ## [1] 0.113
 
 ``` r
 mean(test.Y != "No")
