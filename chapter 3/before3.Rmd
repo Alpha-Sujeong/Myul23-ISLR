@@ -7,8 +7,6 @@ output: html_document
 knitr::opts_chunk$set(echo = T)
 ```
 
-## Regression functions by examples
-
 ### pre-requires
 ``` {r include = F}
 ## library(MASS)
