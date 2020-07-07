@@ -1,0 +1,145 @@
+---
+title: "3. Linear Regression"
+output: html_document
+---
+
+```{r setup, include = F}
+knitr::opts_chunk$set(echo = T)
+```
+
+## Regression functions by examples
+
+### pre-requires
+``` {r include = F}
+## library(MASS)
+library(car)    ## vif()
+data(Boston, package = "MASS")
+data(Carseats, package = "ISLR")
+```
+
+store unique data sets.
+``` {r eval = F}
+write.csv(Boston, "Boston.csv", row.names = F, quote = F)
+write.csv(Carseats, "Carseats.csv", row.names = T, quote = F)
+```
+---
+### 1. Simple Linear Regression
+data checking 
+``` {r}
+## fix(Boston)
+names(Boston)
+```
+> fix( ): whole check for data set
+
+``` {r}
+lm.fit = lm(medv ~ lstat, data = Boston)
+## attach(Boston);	lm.fit = lm(medv ~ lstat)
+summary(lm.fit);	summary(lm.fit)$r.sq;	summary(lm.fit)$sigma
+## names(lm.fit);	coef(lm.fit);
+```
+confint(lm.fit): coefficient 2.5, 97.5 percentile value
+
+``` {r}
+predict(lm.fit, data.frame(lstat = c(5,10,15)), interval = "confidence")
+predict(lm.fit, data.frame(lstat = c(5,10,15)), interval = "prediction")
+```
+
+``` {r Boston}
+plot(lstat, medv)
+abline(lm.fit)
+## abline(lm.fit, lwd = 3);         abline(lm.fit, lwd = 3, col = "red")
+## plot(lstat, medv, col = "red");  plot(lstat, medv, pch = 20)
+## plot(lstat, medv, pch = "+");	plot(1:20, 1:20, pch = 1:20)
+```
+
+``` {r}
+par(mfrow = c(2,2))
+plot(lm.fit)
+
+plot(predict(lm.fit), residuals(lm.fit))
+plot(predict(lm.fit), rstudent(lm.fit))
+## external studentization residuals
+
+plot(hatvalues(lm.fit))
+which.max(hatvalues(lm.fit))
+## return maximum data
+```
+
+---
+### 2. Multiple Linear Regression
+``` {r}
+lm.fit = lm(medv ~ lstat + age, data = Boston)
+summary(lm.fit)
+## lm.fit = lm(medv ~, data = Boston)
+## summary(lm.fit)
+```
+
+``` {r}
+vif(lm.fit)
+```
+
+``` {r}
+lm.fit1 = lm(medv ~. - age, data = Boston)
+## lm.fit1 = update(lm.fit, ~.-age)
+summary(lm.fit1)
+```
+> update( ): literally update (fit) function
+
+---
+### 3. Interaction Term
+``` {r Boston}
+summary(lm(medv ~ lstat*age)
+```
+- '*' means adding all (two) variables and interaction term
+- ':' means adding first variable and interaction term
+
+---
+### 4. Non-linear Transormations of the Predictors
+``` {r}
+lm.fit2 = lm(medv ~ lstat + I(lstat^2))
+summary(lm.fit2)
+```
+represent two-square term through '^', 'I( )'
+
+``` {r}
+par(mfrow = c(2,2))
+plot(lm.fit2)
+```
+
+##### compare with normal and quadratic
+``` {r}
+lm.fit = lm(medv ~ lstat)
+anova(lm.fit, lm.fit2)
+```
+
+##### 5-degree poly
+``` {r Boston}
+lm.fit5 = lm(medv ~ poly(lstat, 5))
+summary(lm.fit5)
+```
+
+##### log
+``` {r Boston}
+summary(lm(mdev ~ log(rm))
+```
+
+---
+### 5. Qualitative Predictors
+data checking 
+``` {r}
+## fix(Carseats)
+names(Carseats)
+```
+
+``` {r Carseats}
+lm.fit = lm(Sales ~. + Income:Advertising + Price:Age)
+summary(lm.fit)
+```
+
+``` {r eval = F}
+contrasts(ShelveLoc)
+```
+> contrasts( ): making dummy variables
+
+---
+boldly skip for custom (combine) function

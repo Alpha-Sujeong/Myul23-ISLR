@@ -19,7 +19,7 @@ plot(lstat, medv)
 abline(lm.fit)
 # abline(lm.fit, lwd = 3);	abline(lm.fit, lwd = 3, col = "red")
 # plot(lstat, medv, col = "red");	plot(lstat, medv, pch = 20);
-# plot(lstat, medv, pch = "+");	plot(1:20, 1:20, pch=1:20)
+# plot(lstat, medv, pch = "+");	plot(1:20, 1:20, pch = 1:20)
 par(mfrow = c(2,2))
 plot(lm.fit)
 
@@ -29,17 +29,20 @@ plot(predict(lm.fit), rstudent(lm.fit))	# 외적 표준화잔차
 plot(hatvalues(lm.fit))
 which.max(hatvalues(lm.fit));	# 데이터 중 가장 큰 값을 반환.
 
-lm.fit = lm(medv ~ lstat + age, data=Boston)
+
+lm.fit = lm(medv ~ lstat + age, data = Boston)
 summary(lm.fit)
 # lm.fit = lm(medv ~, data = Boston);	summary(lm.fit)
 
 # library(car)
 vif(lm.fit)
 
-lm.fit1 = lm(medv ~.-age, data=Boston);		# lm.fit1 = update(lm.fit, ~.-age)
+lm.fit1 = lm(medv ~. - age, data = Boston);		# lm.fit1 = update(lm.fit, ~.-age)
 summary(lm.fit1)
 
-summary(lm(medv ~ lstat*age, data=Boston)
+
+summary(lm(medv ~ lstat*age, data = Boston)
+
 
 # special formula mark ^, I()를 통해 값의 제곱임을 표현
 lm.fit2 = lm(medv ~ lstat + I(lstat^2))
@@ -48,7 +51,7 @@ summary(lm.fit2)
 lm.fit = lm(medv ~ lstat)
 anova(lm.fit, lm.fit2)
 
-par(mfrow=c(2,2))
+par(mfrow = c(2,2))
 plot(lm.fit2)
 
 lm.fit5 = lm(medv ~ poly(lstat, 5))
@@ -56,9 +59,10 @@ summary(lm.fit5)
 
 summary(lm(mdev ~ log(rm), data = Boston)
 
-# write.csv(Carseats, "Carsearts.csv", row.names = T, quote = F)
 
-lm.fit = lm(Sales ~.+Income:Advertising + Price:Age, data = Carseats)
+# write.csv(Carseats, "Carseats.csv", row.names = T, quote = F)
+
+lm.fit = lm(Sales ~. + Income:Advertising + Price:Age, data = Carseats)
 summary(lm.fit)
 
 # attach(Carseats)
