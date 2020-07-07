@@ -97,7 +97,7 @@ par(mfrow = c(2,2))
 plot(lm.fit)
 ```
 
-<img src="before3_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+![](before3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 ``` r
 par(mfrow = c(1,3))
@@ -107,7 +107,7 @@ plot(predict(lm.fit), rstudent(lm.fit))
 plot(hatvalues(lm.fit))
 ```
 
-<img src="before3_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
+![](before3_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 ``` r
 which.max(hatvalues(lm.fit))
@@ -265,7 +265,7 @@ par(mfrow = c(2,2))
 plot(lm.fit2)
 ```
 
-<img src="before3_files/figure-gfm/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
+![](before3_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ##### compare with normal and quadratic
 
