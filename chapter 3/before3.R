@@ -41,7 +41,7 @@ lm.fit1 = lm(medv ~. - age, data = Boston);		# lm.fit1 = update(lm.fit, ~.-age)
 summary(lm.fit1)
 
 
-summary(lm(medv ~ lstat*age, data = Boston)
+summary(lm(medv ~ lstat*age, data = Boston))
 
 
 # special formula mark ^, I()를 통해 값의 제곱임을 표현
@@ -57,7 +57,7 @@ plot(lm.fit2)
 lm.fit5 = lm(medv ~ poly(lstat, 5))
 summary(lm.fit5)
 
-summary(lm(mdev ~ log(rm), data = Boston)
+summary(lm(medv ~ log(rm), data = Boston))
 
 
 # write.csv(Carseats, "Carseats.csv", row.names = T, quote = F)
