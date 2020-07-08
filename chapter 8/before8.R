@@ -1,22 +1,22 @@
 # Decision Tree
-# Bagging: Bootstrap ±â¹ıÀ» ÀÌ¿ëÇØ ¸¸µç (ÀÚ±âº¹Á¦Çü?) tree¸¦ Æò±ÕÀûÀ¸·Î ±¸¼ºÇÔ.
-# Random Forest: baggingº¸´Ü ³ª¾Æ°£ ¹æ¹ı, subset m ¶ÇÇÑ randomly
-# Boosting: baggingÇÏ·Á°í ³ª´« µ¥ÀÌÅÍ¿¡¼­ Ã¹¹øÂ°·Î tree¸¦ ±¸¼ºÇÏ°í, ³ª¸ÓÁø validation setÃ³·³ »ç¿ë.
+# Bagging: Bootstrap ê¸°ë²•ì„ ì´ìš©í•´ ë§Œë“  (ìê¸°ë³µì œí˜•) treeë¥¼ í‰ê· ì ìœ¼ë¡œ êµ¬ì„±í•¨.
+# Random Forest: baggingë³´ë‹¨ ë‚˜ì•„ê°„ ë°©ë²•, subset m ë˜í•œ randomly
+# Boosting: baggingí•˜ë ¤ê³  ë‚˜ëˆˆ ë°ì´í„°ì—ì„œ ì²«ë²ˆì§¸ë¡œ treeë¥¼ êµ¬ì„±í•˜ê³ , ë‚˜ë¨¸ì§„ validation setì²˜ëŸ¼ ì‚¬ìš©.
 
 
-# ¿¹Á¦¸¦ ÅëÇÑ (decision) tree ÇÔ¼ö
+# ì˜ˆì œë¥¼ í†µí•œ (decision) tree í•¨ìˆ˜
 library(ISLR)
 library(tree)
 
 
-# ÀüÃ³¸® ÁßÀÔ´Ï´Ù.
+# ì „ì²˜ë¦¬ ì¤‘ì…ë‹ˆë‹¤.
 High = ifelse(Carseats$Sales <= 8, "No", "Yes")
 Carseats = data.frame(Carseats, High)
 
 tree = tree(High ~.-Sales, Carseats)
 summary(tree)
 
-# ¿Í. ÇÔ¼ö´Â ¾Ë¾Æµè°Ú´Âµ¥ ¼³¸íÀ¸·Î ¾²ÀÎ ½ÄÀ» ¸ø ¾Ë¾Æµè°Ú´Âµ¥.
+# ì™€. í•¨ìˆ˜ëŠ” ì•Œì•„ë“£ê² ëŠ”ë° ì„¤ëª…ìœ¼ë¡œ ì“°ì¸ ì‹ì„ ëª» ì•Œì•„ë“£ê² ëŠ”ë°.
 plot(tree)
 text(tree, pretty = 0)
 # node label display, pretty = 0: category name whole display
@@ -35,15 +35,15 @@ table(tree.pred, High.test)
 # sum(diag(table(tree.pred, High.test)))/200
 
 
-# ¿ª½Ã ÇÔ¼ö°¡ ÁÁ¾Æ, cv°¡ ¹Ù·Î ¿¬°áµÇ¾î ÀÖÀİ¾Æ.
+# ì—­ì‹œ í•¨ìˆ˜ê°€ ì¢‹ì•„, cvê°€ ë°”ë¡œ ì—°ê²°ë˜ì–´ ìˆì–ì•„.
 # set.seed(3)
 cv.carseats = cv.tree(tree.carseats, FUN = prune.misclass)
 
 # names(cv.carseats)
 cv.carseats
-# °ªÀ» º¸¸é dev°¡ Á¦ÀÏ ÀÛÀ» ¶§´Â 3, 4¹øÂ° Ç×
-# ÀÌ¶§ÀÇ tree size(the number of terminal nodes)´Â 14¿Í 9
-# interpretÀ» À§ÇØ tree´Â ÀÛÀ»¼ö·Ï ÁÁ±â ¶§¹®¿¡ 9¸¦ ¼±ÅÃ
+# ê°’ì„ ë³´ë©´ devê°€ ì œì¼ ì‘ì„ ë•ŒëŠ” 3, 4ë²ˆì§¸ í•­
+# ì´ë•Œì˜ tree size(the number of terminal nodes)ëŠ” 14ì™€ 9
+# interpretì„ ìœ„í•´ treeëŠ” ì‘ì„ìˆ˜ë¡ ì¢‹ê¸° ë•Œë¬¸ì— 9ë¥¼ ì„ íƒ
 
 par(mfrow = c(1, 2))
 plot(cv.carseats$size, cv.carseats$dev, type = 'b')
@@ -53,14 +53,14 @@ prune.carseats = prune.misclass(tree.carseats, best = 9)
 # par(mfrow = c(1, 1))
 plot(prune.carseats)
 text(prune.carseats, pretty = 0)
-# ¾Õ¼­ Çß´ø ±×·¡ÇÁº¸´Ü Á¤°¥ÇØÁ³À½.
+# ì•ì„œ í–ˆë˜ ê·¸ë˜í”„ë³´ë‹¨ ì •ê°ˆí•´ì¡ŒìŒ.
 
 tree.pred = predict(prune.carseats, test, type = "class")
 table(tree.pred, High.test)
 # sum(diag(table(tree.pred, High.test)))/200
 
 
-# ¹ø¿Ü
+# ë²ˆì™¸
 prune.carseats = prune.misclass(tree.carseats, best = 15)
 plot(prune.carseats)
 text(prune.carseats, pretty = 0)
@@ -68,7 +68,7 @@ text(prune.carseats, pretty = 0)
 tree.pred = predict(prune.carseats, test, type = "class")
 table(tree.pred, High.test)
 # sum(diag(table(tree.pred, High.test)))/200
-# ¿Í °°À¸¸é ¾È µÇ´Âµ¥, ´õ ÀÛÀº ¿¹Ãø·ÂÀÌ ³ª¿Í¾ß ÇÏ´Âµ¥ ¿Ö °°Àº °ª.
+# ì™€ ê°™ìœ¼ë©´ ì•ˆ ë˜ëŠ”ë°, ë” ì‘ì€ ì˜ˆì¸¡ë ¥ì´ ë‚˜ì™€ì•¼ í•˜ëŠ”ë° ì™œ ê°™ì€ ê°’.
 
 
 
@@ -81,29 +81,29 @@ train = sample(1:nrow(Boston), nrow(Boston)/2)
 
 tree.boston = tree(medv ~., Boston, subset = train)
 summary(tree.boston)
-# Èì. ÇÔ¼ö°¡ ¹Ù²ï °ÍÀÎ°¡ train randomly°¡ ³Ê¹« ³Ê¹« Àß µÈ °ÍÀÎ°¡.
+# í . í•¨ìˆ˜ê°€ ë°”ë€ ê²ƒì¸ê°€ train randomlyê°€ ë„ˆë¬´ ë„ˆë¬´ ì˜ ëœ ê²ƒì¸ê°€.
 
 plot(tree.boston)
 text(tree.boston, pretty = 0)
-# plotÀÌ ±²ÀåÈ÷ ´Ù¸£°Ô ³ª¿Â °Í °°±º¿ä. ¹¹¶ó´ÂÁö ¸ø ¾Ë¾Æµè°Ú¾î¿ä.
+# plotì´ êµ‰ì¥íˆ ë‹¤ë¥´ê²Œ ë‚˜ì˜¨ ê²ƒ ê°™êµ°ìš”. ë­ë¼ëŠ”ì§€ ëª» ì•Œì•„ë“£ê² ì–´ìš”.
 
 cv.boston = cv.tree(tree.boston)
 plot(cv.boston$size, cv.boston$dev, type = 'b')
-# Èì Á¦²« size°¡ ´Ã¼ö·Ï dev°¡ °¨¼ÒÇÏ´Â ¸ğ¾çÀÎµ¥¿ä.
+# í  ì œê»€ sizeê°€ ëŠ˜ìˆ˜ë¡ devê°€ ê°ì†Œí•˜ëŠ” ëª¨ì–‘ì¸ë°ìš”.
 
-# ÀÏ´Ü Á¶¿ëÈ÷ µû¶óÇØº¾´Ï´Ù.
+# ì¼ë‹¨ ì¡°ìš©íˆ ë”°ë¼í•´ë´…ë‹ˆë‹¤.
 prune.boston = prune.tree(tree.boston, best = 5)
 plot(prune.boston)
 text(prune.boston, pretty = 0)
-# »ìÂ¦ °¡ÁöÄ¡±â µÇ¾ú½À´Ï´Ù.
+# ì‚´ì§ ê°€ì§€ì¹˜ê¸° ë˜ì—ˆìŠµë‹ˆë‹¤.
 
 yhat = predict(tree.boston, newdata = Boston[-train,])
 boston.test = Boston[-train, "medv"]
 
 plot(yhat, boston.test)
 abline(0, 1)
-# Èì ¼ÖÁ÷È÷ ÀÌ ±×¸² Á» ³Ê¹«ÇÏ´Ü »ı°¢ÀÌ µå´Âµ¥..
-# º¯¼ö º¯È¯À» ÇÏ°Å³ª ´õ¹Ì º¯¼ö¸¦ ¾²°Å³ª µÑ Áß ÇÏ³ª´Â ÇØ¾ß ÇÒ °Í °°Àºµ¥.
+# í  ì†”ì§íˆ ì´ ê·¸ë¦¼ ì¢€ ë„ˆë¬´í•˜ë‹¨ ìƒê°ì´ ë“œëŠ”ë°..
+# ë³€ìˆ˜ ë³€í™˜ì„ í•˜ê±°ë‚˜ ë”ë¯¸ ë³€ìˆ˜ë¥¼ ì“°ê±°ë‚˜ ë‘˜ ì¤‘ í•˜ë‚˜ëŠ” í•´ì•¼ í•  ê²ƒ ê°™ì€ë°.
 mean((yhat-boston.test)^2)
 
 
@@ -115,7 +115,7 @@ library(randomForest)
 # set.seed(1)
 bag.boston = randomForest(medv ~., Boston, subset = train, mtry = 13, importance = T)
 bag.boston
-# mtry = 13: 13°³ÀÇ ¿¹Ãøº¯¼ö¸¦ »ç¿ëÇÕ´Ï´Ù.
+# mtry = 13: 13ê°œì˜ ì˜ˆì¸¡ë³€ìˆ˜ë¥¼ ì‚¬ìš©í•©ë‹ˆë‹¤.
 yhat.bag = predict(bag.boston, newdata = Boston[-train,])
 
 plot(yhat.bag, boston.test)
@@ -134,13 +134,13 @@ mean((yhat.bag - boston.test)^2)
 rf.boston = randomForest(medv ~., Boston, subset = train, mtry = 6, importance = T)
 yhat.rf = predict(rf.boston, newdata = Boston[-train,])
 mean((yhat.rf - boston.test)^2)
-# seed¿¡ ¿µÇâÀÎÁö mtry¸¦ ÀÛ°Ô ÇÑ °Çµ¥, ¿ø·¡ randomforestº¸´Ù ¸Å¿ì ¾à°£ Å©°Ô ³ª¿À³×¿ä
+# seedì— ì˜í–¥ì¸ì§€ mtryë¥¼ ì‘ê²Œ í•œ ê±´ë°, ì›ë˜ randomforestë³´ë‹¤ ë§¤ìš° ì•½ê°„ í¬ê²Œ ë‚˜ì˜¤ë„¤ìš”
 
 importance(rf.boston)
-# ´ë°­ ºñ½ÁÇÏ°Ô ³ª¿À´Â °Ô seed¿¡ ¹®Á¦ÀÎ °ÍÀÎ°¡
-# randomforestÀÇ ³»ºÎ split ÇÔ¼ö°¡ ¾à°£ ¹Ù²ï ¹®Á¦ÀÎ °Í °°±âµµ.
+# ëŒ€ê°• ë¹„ìŠ·í•˜ê²Œ ë‚˜ì˜¤ëŠ” ê²Œ seedì— ë¬¸ì œì¸ ê²ƒì¸ê°€
+# randomforestì˜ ë‚´ë¶€ split í•¨ìˆ˜ê°€ ì•½ê°„ ë°”ë€ ë¬¸ì œì¸ ê²ƒ ê°™ê¸°ë„.
 varImpPlot(rf.boston)
-# Èì. Âü ¾Ë¾Æº¸±â ½±°Ô ³ª¿À³×¿ä.
+# í . ì°¸ ì•Œì•„ë³´ê¸° ì‰½ê²Œ ë‚˜ì˜¤ë„¤ìš”.
 
 
 
@@ -152,7 +152,7 @@ library(gbm)
 boost.boston = gbm(medv ~., Boston[train,], distribution = "gaussian",
                    n.trees = 5000, interaction.depth = 4)
 summary(boost.boston)
-# Áß¿äµµ È®ÀÎÇÏ°Ô sortingµÇ¾î ³ª¿È.
+# ì¤‘ìš”ë„ í™•ì¸í•˜ê²Œ sortingë˜ì–´ ë‚˜ì˜´.
 
 par(mfrow = c(1, 2))
 plot(boost.boston, i = "rm")
@@ -160,7 +160,7 @@ plot(boost.boston, i = "lstat")
 
 yhat.boost = predict(boost.boston, newdata = Boston[-train,], n.trees = 5000)
 mean((yhat.boost - boston.test)^2)
-# °­ÀÇ ¶§µµ ±×·¨Áö¸¸, randomforestº¸´Ù ´õ ³ªÀº °ªÀ¸·Î ³ª¿À´Âµ¥.
+# ê°•ì˜ ë•Œë„ ê·¸ë¬ì§€ë§Œ, randomforestë³´ë‹¤ ë” ë‚˜ì€ ê°’ìœ¼ë¡œ ë‚˜ì˜¤ëŠ”ë°.
 
 
 boost.boston = gbm(medv ~., Boston[train,], distribution = "gaussian",
@@ -168,5 +168,5 @@ boost.boston = gbm(medv ~., Boston[train,], distribution = "gaussian",
 # default: shrinkage = 0.001
 yhat.boost = predict(boost.boston, newdata = Boston[-train,], n.trees = 5000)
 mean((yhat.boost - boston.test)^2)
-# Ãà¼Ò ¸ğ¼ö? ÀÌ¸§ÀÌ ¹¹´õ¶ó
-# ±×°Å °ªÀ» ´Ã·È´Âµ¥ mse ÃßÁ¤µµ ´Ã¾î¹ö·È´Ù. ºĞ¸íÀÌ ÁÙ¾îµç´Ù°í ¹è¿î °Í °°Àºµ¥.
+# ì¶•ì†Œ ëª¨ìˆ˜? ì´ë¦„ì´ ë­ë”ë¼
+# ê·¸ê±° ê°’ì„ ëŠ˜ë ¸ëŠ”ë° mse ì¶”ì •ë„ ëŠ˜ì–´ë²„ë ¸ë‹¤. ë¶„ëª…ì´ ì¤„ì–´ë“ ë‹¤ê³  ë°°ìš´ ê²ƒ ê°™ì€ë°.
