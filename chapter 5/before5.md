@@ -29,28 +29,28 @@ lm.fit = lm(mpg ~ horsepower, subset = train)
 mean((mpg - predict(lm.fit, Auto))[-train]^2)
 ```
 
-    ## [1] 27.44976
+    ## [1] 23.92811
 
 ``` r
 lm.fit2 = lm(mpg ~ poly(horsepower, 2), subset = train)
 mean((mpg - predict(lm.fit2, Auto))[-train]^2)
 ```
 
-    ## [1] 22.73279
+    ## [1] 19.12742
 
 ``` r
 lm.fit3 = lm(mpg ~ poly(horsepower, 3), subset = train)
 mean((mpg - predict(lm.fit3, Auto))[-train]^2)
 ```
 
-    ## [1] 22.69013
+    ## [1] 19.15292
 
 -----
 
 ### 2\. Leave-One-Out Cross-Validation
 
 ``` r
-glm.fit = glm(mpg ~ horsepower, data = Auto)
+glm.fit = glm(mpg ~ horsepower)
 coef(glm.fit)
 ```
 
@@ -58,7 +58,7 @@ coef(glm.fit)
     ##  39.9358610  -0.1578447
 
 ``` r
-glm.fit = glm(mpg ~ horsepower, data = Auto)
+glm.fit = glm(mpg ~ horsepower)
 cv.err = cv.glm(Auto, glm.fit)
 cv.err$delta
 ```
@@ -70,7 +70,7 @@ cv.err$delta
 ``` r
 cv.error = rep(0, 5)
 for (i in 1:5) {
-  glm.fit = glm(mpg ~ poly(horsepower, i), data = Auto)
+  glm.fit = glm(mpg ~ poly(horsepower, i))
   cv.error[i] = cv.glm(Auto, glm.fit)$delta[1]
 }; rm(i)
 cv.error
@@ -86,14 +86,14 @@ cv.error
 ## set.seed(17)
 cv.error.10 = rep(0, 10)
 for (i in 1:10) {
-  glm.fit = glm(mpg ~ poly(horsepower, i), data = Auto)
+  glm.fit = glm(mpg ~ poly(horsepower, i))
   cv.error.10[i] = cv.glm(Auto, glm.fit, K = 10)$delta[1]
 }; rm(i)
 cv.error.10
 ```
 
-    ##  [1] 24.22516 19.19274 19.75959 19.24482 18.98441 19.09542 19.27776 19.67650
-    ##  [9] 19.19299 19.57180
+    ##  [1] 24.17553 19.30827 19.28473 19.26345 19.14839 18.91767 18.61025 19.06668
+    ##  [9] 19.04704 19.39323
 
 because of being called as 2nd bias-corrected ver, maybe Trimmed Mean?
 
@@ -116,7 +116,7 @@ alpha.fn(Portfolio, 1:100)
 alpha.fn(Portfolio, sample(100, 100, replace = T))
 ```
 
-    ## [1] 0.4981721
+    ## [1] 0.593352
 
 ``` r
 boot(Portfolio, alpha.fn, R = 1000)
@@ -131,8 +131,8 @@ boot(Portfolio, alpha.fn, R = 1000)
     ## 
     ## 
     ## Bootstrap Statistics :
-    ##      original      bias    std. error
-    ## t1* 0.5758321 0.005416105  0.08911611
+    ##      original     bias    std. error
+    ## t1* 0.5758321 0.00509274  0.09086045
 
 ##### (Linear) model accuracy estimation
 
@@ -150,14 +150,14 @@ boot.fn(Auto, sample(392, 392, replace = T))
 ```
 
     ## (Intercept)  horsepower 
-    ##  38.8444605  -0.1513271
+    ##  40.2668594  -0.1636163
 
 ``` r
 boot.fn(Auto, sample(392, 392, replace = T))
 ```
 
     ## (Intercept)  horsepower 
-    ##  39.0509455  -0.1497487
+    ##  39.8013559  -0.1543602
 
 ``` r
 boot(Auto, boot.fn, 1000)
@@ -172,9 +172,9 @@ boot(Auto, boot.fn, 1000)
     ## 
     ## 
     ## Bootstrap Statistics :
-    ##       original        bias    std. error
-    ## t1* 39.9358610  0.0094165758 0.878756221
-    ## t2* -0.1578447 -0.0002203993 0.007524357
+    ##       original     bias    std. error
+    ## t1* 39.9358610  0.0579691 0.857037220
+    ## t2* -0.1578447 -0.0005441 0.007251178
 
 ``` r
 summary(lm(mpg ~ horsepower))$coef
@@ -201,12 +201,12 @@ boot(Auto, boot.fn, 1000)
     ## 
     ## Bootstrap Statistics :
     ##         original        bias     std. error
-    ## t1* 56.900099702  1.082937e-01 2.0840149861
-    ## t2* -0.466189630 -1.795473e-03 0.0333259606
-    ## t3*  0.001230536  7.086850e-06 0.0001206793
+    ## t1* 56.900099702  3.262858e-03 2.0356514421
+    ## t2* -0.466189630 -2.464074e-04 0.0327449428
+    ## t3*  0.001230536  1.853376e-06 0.0001195276
 
 ``` r
-summary(lm(mpg ~ horsepower + I(horsepower^2), data = Auto))$coef
+summary(lm(mpg ~ horsepower + I(horsepower^2)))$coef
 ```
 
     ##                     Estimate   Std. Error   t value      Pr(>|t|)
