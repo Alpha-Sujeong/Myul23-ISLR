@@ -9,6 +9,7 @@
 # but SVM exists perfect zero point.
 
 
+
 # SVM function by examples
 library(ISLR)
 library(e1071) # svm(), tune()
@@ -170,6 +171,28 @@ plot(svmfit, dat, col = c("lightblue", "azure", "lightgreen"))
 
 # Application to Gene Expression Data
 # functions are very normal functioning
+
+# storing
+data(Khan, package = "ISLR")
+dim(Khan$xtrain); dim(Khan$xtest) # 63 vs. 20
+
+appending = function(dataframe, string) {
+  if(is.null(dim(dataframe)[1]))
+    tag = rep(string, length(dataframe))
+  else tag = rep(string, dim(dataframe)[1])
+  dataframe = cbind(dataframe, tag)
+  return(dataframe)
+}
+
+xtrain = Khan$xtrain; xtest = Khan$xtest
+ytrain = appending(Khan$ytrain, "train")
+ytest = appending(Khan$ytest, "test")
+
+khan2 = cbind(rbind(xtrain, xtest), rbind(ytrain, ytest))
+dim(khan2)
+write.csv(khan2, "Khan.csv", row.names = F, quote = F)
+
+
 names(Khan)
 dim(Khan$xtrain); dim(Khan$xtest)
 length(Khan$ytrain); length(Khan$ytest)
@@ -184,4 +207,3 @@ table(out$fitted, dat$y)
 dat.te = data.frame(Khan$xtest, y = as.factor(Khan$ytest))
 pred.te = predict(out, newdata = dat.te)
 table(pred.te, dat.te$y)
-

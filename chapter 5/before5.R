@@ -53,7 +53,7 @@ cv.error = rep(0, 5)
 for (i in 1:5) {
   glm.fit = glm(mpg ~ poly(horsepower, i), data = Auto)
   cv.error[i] = cv.glm(Auto, glm.fit)$delta[1]
-}
+}; rm(i)
 cv.error
 
 
@@ -63,7 +63,7 @@ cv.error.10 = rep(0, 10)
 for (i in 1:10) {
   glm.fit = glm(mpg ~ poly(horsepower, i), data = Auto)
   cv.error.10[i] = cv.glm(Auto, glm.fit, K = 10)$delta[1]
-}
+}; rm(i)
 cv.error.10
 # 두번째는 bias-corrected version이라는 거 보니까 혹시 몰라서 끝값을 절삭하고 구한 듯?
 
