@@ -112,7 +112,7 @@ predict(glm.fits, newdata = data.frame(Lag1 = c(1.2, 1.5), Lag2 = c(1.1, -0.8)),
 lda.fit = lda(Direction ~ Lag1 + Lag2, subset = train)
 lda.fit
 ```
-on first test, $phi_1$ = 0.492, $phi_2$ = 0.508
+on first test, $\phi_1$ = 0.492, $\phi_2$ = 0.508
 
 ```{r include = F}
 lda.pred = predict(lda.fit, Smarket.2005)

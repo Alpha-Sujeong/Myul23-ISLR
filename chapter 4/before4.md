@@ -201,7 +201,7 @@ lda.fit
     ## Lag1 -0.6420190
     ## Lag2 -0.5135293
 
-on first test, \(phi_1\) = 0.492, \(phi_2\) = 0.508
+on first test, \(\phi_1\) = 0.492, \(\phi_2\) = 0.508
 
 ``` r
 lda.class = lda.pred$class
@@ -314,14 +314,14 @@ table(knn.pred, Direction.2005)
 
     ##         Direction.2005
     ## knn.pred Down Up
-    ##     Down   48 54
-    ##     Up     63 87
+    ##     Down   48 55
+    ##     Up     63 86
 
 ``` r
 mean(knn.pred == Direction.2005)
 ```
 
-    ## [1] 0.5357143
+    ## [1] 0.531746
 
 on first test, it observed 53.6%
 
@@ -349,7 +349,7 @@ standardized.X = scale(Caravan[,-86])
 mean(test.Y != knn.pred)
 ```
 
-    ## [1] 0.113
+    ## [1] 0.117
 
 ``` r
 mean(test.Y != "No")
