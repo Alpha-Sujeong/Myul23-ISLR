@@ -57,7 +57,7 @@ coef(regfit.full, which.min(reg.summary$bic))
 
 
 
-# Foward, Backward Stepwise Selection (FS, BE)
+# Forward, Backward Stepwise Selection (FS, BE)
 regfit.fwd = regsubsets(Salary~., Hitters, nvmax = 19, method = "forward")
 summary(regfit.fwd)
 # 아 이거 최근에 부른 변수 부르는 별칭 있는데, 그거 쓰면 편한데.
@@ -225,11 +225,9 @@ library(pls)
 pcr.fit = pcr(Salary~., data = Hitters, scale = T, validation = "CV")
 # 조건이 많은 lm, 얘는 data를 써줘야 인식하는 약간 poor한 함수다.
 summary(pcr.fit)
-# 리스트 첫번째 항목은 EDA에서 배운 CV가 맞는가?
-# variation 보는 게 리스트 두번째 항목이였다.
 
 validationplot(pcr.fit, val.type = "MSEP")
-# 오홍 pca 때의 그 e.v 보는 그 함수 같네.
+# 오홍, pca 때의 누적 eigen value 그래프 같네.
 
 # set.seed(1)
 pcr.fit = pcr(Salary~., data = Hitters, subset = train, scale = T, validation = "CV")
