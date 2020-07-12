@@ -3,6 +3,13 @@
 
 ### pre-requires
 
+``` r
+## library(MASS)
+library(car)    ## vif()
+data(Boston, package = "MASS")
+data(Carseats, package = "ISLR")
+```
+
 store unique data sets.
 
 ``` r
@@ -97,7 +104,7 @@ par(mfrow = c(2,2))
 plot(lm.fit)
 ```
 
-![](before3_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+<img src="before3_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
 ``` r
 par(mfrow = c(1,3))
@@ -107,7 +114,7 @@ plot(predict(lm.fit), rstudent(lm.fit))
 plot(hatvalues(lm.fit))
 ```
 
-![](before3_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+<img src="before3_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
 ``` r
 which.max(hatvalues(lm.fit))
@@ -265,7 +272,7 @@ par(mfrow = c(2,2))
 plot(lm.fit2)
 ```
 
-![](before3_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+<img src="before3_files/figure-gfm/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
 
 ##### compare with normal and quadratic
 

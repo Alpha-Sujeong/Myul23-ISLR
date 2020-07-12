@@ -13,6 +13,13 @@ LR, LDA, QDA, KNN 방법을 비교
 
 ### pre-requires
 
+``` r
+library(MASS)   # lda()
+library(class)  # knn()
+data(Smarket, package = "ISLR")
+attach(Smarket)
+```
+
 Smarket: Stock Market Data
 
 ``` r
@@ -110,6 +117,11 @@ comprehensive(overall) evaluation for direction, qualitative response
 variable
 
 ``` r
+glm.pred = rep("Down", 1250)
+glm.pred[glm.probs > 0.5] = "Up"
+```
+
+``` r
 table(glm.pred, Direction)
 ```
 
@@ -128,7 +140,26 @@ on first test, it observed 52.2%
 
 #### on train data
 
+``` r
+train = (Year < 2005)
+Smarket.2005 = Smarket[!train,]
+dim(Smarket.2005)
+```
+
+    ## [1] 252   9
+
+``` r
+Direction.2005 = Direction[!train]
+```
+
 ##### train data on all variables
+
+``` r
+glm.fits = glm(Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, family = binomial, subset = train)
+glm.probs = predict(glm.fits, Smarket.2005, type = "response")
+glm.pred = rep("Down", 252)
+glm.pred[glm.probs > 0.5] = "Up"
+```
 
 ``` r
 table(glm.pred, Direction.2005)
@@ -148,6 +179,13 @@ mean(glm.pred == Direction.2005)
 on first test, it observed 48%
 
 ##### train data on 2 variables
+
+``` r
+glm.fits = glm(Direction ~ Lag1 + Lag2, family = binomial, subset = train)
+glm.probs = predict(glm.fits, Smarket.2005, type = "response")
+glm.pred = rep("Down", 252)
+glm.pred[glm.probs > 0.5] = "Up"
+```
 
 ``` r
 table(glm.pred, Direction.2005)
@@ -202,6 +240,11 @@ lda.fit
     ## Lag2 -0.5135293
 
 on first test, \(\phi_1\) = 0.492, \(\phi_2\) = 0.508
+
+``` r
+lda.pred = predict(lda.fit, Smarket.2005)
+## names(lda.pred)
+```
 
 ``` r
 lda.class = lda.pred$class
@@ -289,6 +332,12 @@ on first test, it observed 59.9%
 train data
 
 ``` r
+train.X = cbind(Lag1, Lag2)[train,]
+test.X = cbind(Lag1, Lag2)[!train,]
+train.Direction = Direction[train]
+```
+
+``` r
 ## set.seed(1)
 knn.pred = knn(train.X, test.X, train.Direction, k = 1)
 table(knn.pred, Direction.2005)
@@ -314,20 +363,25 @@ table(knn.pred, Direction.2005)
 
     ##         Direction.2005
     ## knn.pred Down Up
-    ##     Down   48 55
-    ##     Up     63 86
+    ##     Down   48 56
+    ##     Up     63 85
 
 ``` r
 mean(knn.pred == Direction.2005)
 ```
 
-    ## [1] 0.531746
+    ## [1] 0.5277778
 
 on first test, it observed 53.6%
 
 -----
 
 ### add) Caravan data
+
+``` r
+data(Caravan, package = "ISLR")
+attach(Caravan)
+```
 
 summary(Purchase): No: 0.0598
 
@@ -346,10 +400,23 @@ standardized.X = scale(Caravan[,-86])
 ##### test data set
 
 ``` r
+test = 1:1000
+train.X = standardized.X[-test,]
+test.X = standardized.X[test,]
+train.Y = Purchase[-test]
+test.Y = Purchase[test]
+```
+
+``` r
+## set.seed(1)
+knn.pred = knn(train.X, test.X, train.Y, k = 1)
+```
+
+``` r
 mean(test.Y != knn.pred)
 ```
 
-    ## [1] 0.117
+    ## [1] 0.116
 
 ``` r
 mean(test.Y != "No")
@@ -367,13 +434,17 @@ mean(test.Y != "No")
 <!-- end list -->
 
 ``` r
+knn.pred = knn(train.X, test.X, train.Y, k = 3)
+```
+
+``` r
 table(knn.pred, test.Y)
 ```
 
     ##         test.Y
     ## knn.pred  No Yes
-    ##      No  922  54
-    ##      Yes  19   5
+    ##      No  921  54
+    ##      Yes  20   5
 
 on first test, it observed 19.2%
 
@@ -389,8 +460,20 @@ table(knn.pred, test.Y)
 
 on first test, it observed 26.7%
 
+``` r
+glm.fits = glm(Purchase ~., data = Caravan, family = binomial, subset =-test)
+glm.probs = predict(glm.fits, Caravan[test,], type = "response")
+glm.pred = rep("No", 1000)
+glm.pred[glm.probs > 0.5] = "Yes"
+```
+
 구매 가능성에 대한 기준점이 0.5가 아니라 0.25를 넘으면 구매할 가능성이 높아라고 얘기하고 싶은 것.<br /> 말했다시피
 0.5를 넘는 값은 사실상 존재하지 않음. 따라서 0
+
+``` r
+glm.pred = rep("No", 1000)
+glm.pred[glm.probs > 0.25] = "Yes"
+```
 
 ``` r
 table(glm.pred, test.Y)

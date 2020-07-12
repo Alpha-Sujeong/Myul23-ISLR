@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = T)
 - Bootstrap: 주어진 데이터를 랜덤 복원으로 뽑은 (각기 다른) 데이터를 만들어 이를 샘플 삼아 반복.
 
 ### pre-requires
-```{r include = F}
+```{r warning = F, message = F}
 library(boot)   # cv.glm()
 data(Auto, package = "ISLR")
 data(Portfolio, package = "ISLR")
@@ -30,7 +30,7 @@ write.csv(Portfolio, "Portfolio.csv", row.names = F, quote = F)
 
 ### 1. Validation set Approach
 
-```{r include = F}
+```{r message = F}
 attach(Auto)
 train = sample(392, 196)
 ```
@@ -89,7 +89,7 @@ because of being called as 2nd bias-corrected ver, maybe Trimmed Mean?
 ### 4. Bootstrap
 
 ##### parameter accuracy estimation
-```{r include = F}
+```{r message = F}
 alpha.fn = function(data, index) {
   X = data$X[index]
   Y = data$Y[index]
@@ -126,7 +126,7 @@ summary(lm(mpg ~ horsepower))$coef
 ```
 
 model fix
-```{r include = F}
+```{r message = F}
 boot.fn = function(data, index) coefficients(lm(mpg ~ horsepower + I(horsepower^2), data = data, subset = index))
 ```
 
