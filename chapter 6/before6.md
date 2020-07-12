@@ -265,24 +265,43 @@ coef(regfit.bwd, 7)
 
 #### 3\. Choose model using Validation set or Cross-Validation
 
+``` r
+## set.seed(1)
+train = sample(c(T, F), nrow(Hitters), rep = T)
+test = (!train)
+```
+
 Hitters의 행수만큼 t, f 랜덤 반복으로 생성
+
+``` r
+regfit.best = regsubsets(Salary~., Hitters[train,], nvmax = 19)
+test.mat = model.matrix(Salary~., Hitters[test,])
+val.errors = rep(NA, 19)
+for(i in 1:19) {
+  coefi = coef(regfit.best, id = i)
+  pred = test.mat[, names(coefi)] %*% coefi
+  val.errors[i] = mean((Hitters$Salary[test] - pred)^2)
+}; rm(i)
+```
 
 ``` r
 val.errors
 ```
 
-    ##  [1] 141332.3 112914.7 127949.2 121123.0 114817.4 108075.6 110089.1 112934.9
-    ##  [9] 113345.9 117390.7 111723.8 110274.1 111706.0 111184.2 114779.8 114431.4
-    ## [17] 114750.7 114224.5 114216.0
+    ##  [1] 196014.0 173174.3 166121.9 160902.9 155443.3 162018.9 162536.7 164660.7
+    ##  [9] 163511.2 160549.5 154266.4 149910.4 152369.1 152760.7 153304.3 154004.2
+    ## [17] 154450.4 154981.1 154465.5
 
 ``` r
 coef(regfit.best, which.min(val.errors))
 ```
 
-    ##  (Intercept)        AtBat         Hits        Walks         CRBI    DivisionW 
-    ##  204.9850383   -3.0895690   11.1756877    3.2030500    0.7367803 -125.3417073 
-    ##      PutOuts 
-    ##    0.2466557
+    ## (Intercept)       AtBat        Hits       HmRun       Walks       Years 
+    ## -72.1388698  -0.7272083   5.0523282  -5.9465642   2.7387733  15.3712472 
+    ##      CAtBat       CRuns        CRBI      CWalks     LeagueN   DivisionW 
+    ##  -0.2214526   1.2690904   1.2249595  -0.5408976  63.1476707 -48.6095678 
+    ##     PutOuts 
+    ##   0.1402312
 
 어후 생각보다 beta\_0랑 몇 개 회귀계수가 차이가 심하네, 그리고 errors의 최대값이 변해서 보여주는 회귀계수 수도 자꾸
 변함.
@@ -290,16 +309,43 @@ coef(regfit.best, which.min(val.errors))
 ##### custom predict for regsubsets function
 
 ``` r
+predict.regsubsets = function(object, newdata, id, ...) {
+  form = as.formula(object$call[[2]])
+  mat = model.matrix(form, newdata)
+  coefi = coef(object, id = id)
+  xvars = names(coefi)
+  mat[, xvars] %*% coefi
+}
+```
+
+``` r
 regfit.best = regsubsets(Salary~., Hitters, nvmax = 19)
 coef(regfit.best, which.min(val.errors))
 ```
 
-    ##  (Intercept)        AtBat         Hits        Walks         CRBI    DivisionW 
-    ##   91.5117981   -1.8685892    7.6043976    3.6976468    0.6430169 -122.9515338 
-    ##      PutOuts 
-    ##    0.2643076
+    ##  (Intercept)        AtBat         Hits         Runs        Walks       CAtBat 
+    ##  135.5194919   -2.0563475    7.5064072   -1.7965622    6.0619776   -0.1524448 
+    ##        CRuns         CRBI       CWalks      LeagueN    DivisionW      PutOuts 
+    ##    1.5589219    0.7775813   -0.8350722   39.0865444 -112.6442519    0.2842332 
+    ##      Assists 
+    ##    0.2434442
 
 ##### select model when different size
+
+``` r
+## set.seed(1)
+k = 10
+folds = sample(1:k, nrow(Hitters), replace = T)
+cv.errors = matrix(NA, k, 19, dimnames = list(NULL, paste(1:19)))
+
+for(i in 1:k) {
+  best.fit = regsubsets(Salary~., Hitters[folds != i,], nvmax = 19)
+  for(j in 1:19) {
+    pred = predict(best.fit, Hitters[folds == i,], id = j)
+    cv.errors[i, j] = mean((Hitters$Salary[folds == i] - pred)^2)
+  }
+}; rm(i); rm(j)
+```
 
 ``` r
 mean.cv.errors = apply(cv.errors, 2, mean)
@@ -307,11 +353,11 @@ mean.cv.errors
 ```
 
     ##        1        2        3        4        5        6        7        8 
-    ## 136537.5 116112.1 129703.1 132862.8 126218.2 113792.4 118507.0 108256.7 
+    ## 151415.7 133241.7 137678.4 135643.8 134219.0 124320.2 126449.9 115294.7 
     ##        9       10       11       12       13       14       15       16 
-    ## 108459.0 106809.0 109593.9 109109.8 112438.0 110775.6 111867.9 112232.7 
+    ## 114014.1 108798.9 109379.7 112030.3 113521.6 113869.3 114769.3 115060.4 
     ##       17       18       19 
-    ## 112057.6 111741.9 111824.8
+    ## 115309.0 115343.2 115155.2
 
 ``` r
 par(mfrow = c(1,1))
@@ -338,9 +384,19 @@ coef(reg.best, 11)
 와 역시 프로그래밍이 짱이야 alpha = 0이면 ridge고, 1이면 lasso야?<br /> 대단하다, 진짜 어지간히 하나로
 만들고 싶었나보다.
 
+``` r
+X = model.matrix(Salary~., Hitters)[, -1]
+y = Hitters$Salary
+```
+
 X: model의 예측변수들을 자동으로 수치화(더미화 포함)해서 matrix로 표현.
 
 #### 1\. Ridge
+
+``` r
+grid = 10^seq(10, -2, length = 100)
+ridge.mod = glmnet(X, y, alpha = 0, lambda = grid)
+```
 
   - 원래라면 함수가 자동으로 lambda를 설정했겠지만, 지금은 강제적으로 grid 영역 안에서 찾으라고 설정함.
   - 또 glmnet 함수는 자동으로 표준화해서 사용하므로, 이 기능이 필요없다면 standardize = F를 하자.
@@ -415,27 +471,38 @@ predict(ridge.mod, s = 50, type = "coefficients")[1:20,]
 
 #### validation set approach
 
+``` r
+## set.seed(1)
+train = sample(1:nrow(X), nrow(X)/2)
+test = (-train)
+y.test = y[test]
+```
+
+``` r
+ridge.mod = glmnet(X[train,], y[train], alpha = 0, lambda = grid, thresh = 1e-12)
+```
+
 ##### MSE hat
 
 ``` r
 mean((mean(y[train]) - y.test)^2)
 ```
 
-    ## [1] 215760.1
+    ## [1] 177850.2
 
 ``` r
 ridge.pred = predict(ridge.mod, s = 4, newx = X[test,])
 mean((ridge.pred - y.test)^2)
 ```
 
-    ## [1] 159493.6
+    ## [1] 108239.6
 
 ``` r
 ridge.pred = predict(ridge.mod, s = 1e10, newx = X[test,])
 mean((ridge.pred - y.test)^2)
 ```
 
-    ## [1] 215760.1
+    ## [1] 177850.1
 
 ``` r
 ridge.pred = predict(ridge.mod, s = 0, newx = X[test,])
@@ -456,26 +523,26 @@ lm(y ~ X, subset = train)
     ## 
     ## Coefficients:
     ## (Intercept)       XAtBat        XHits       XHmRun        XRuns         XRBI  
-    ##    -30.3437      -0.3961       3.3046      -9.6838      -1.7783       0.8223  
+    ##    225.2710      -1.2459       2.5196       7.5516       2.6381      -1.0935  
     ##      XWalks       XYears      XCAtBat       XCHits      XCHmRun       XCRuns  
-    ##      5.7262      -0.3566      -0.1339       1.2575       6.6666      -0.3503  
+    ##      3.7680      -4.9133      -0.5373       1.8119       0.3674       0.9568  
     ##       XCRBI      XCWalks     XLeagueN   XDivisionW     XPutOuts     XAssists  
-    ##     -1.5956      -0.4070      47.0654     -79.4426       0.2207      -0.1245  
+    ##      0.3330      -0.5412     -25.7487    -132.4662       0.3551       0.5416  
     ##     XErrors  XNewLeagueN  
-    ##      5.0003     -59.5255
+    ##     -6.4488      56.3378
 
 ``` r
 predict(ridge.mod, s = 0, type = "coefficients")[1:20,] ## exact = T
 ```
 
-    ## (Intercept)       AtBat        Hits       HmRun        Runs         RBI 
-    ## -30.5909659  -0.4031400   3.3487137  -9.6304778  -1.8184830   0.8074853 
-    ##       Walks       Years      CAtBat       CHits      CHmRun       CRuns 
-    ##   5.7422226  -0.3429590  -0.1309215   1.2338347   6.6226984  -0.3303117 
-    ##        CRBI      CWalks     LeagueN   DivisionW     PutOuts     Assists 
-    ##  -1.5760527  -0.4132847  46.7194094 -79.4596968   0.2204878  -0.1248610 
-    ##      Errors  NewLeagueN 
-    ##   5.0124241 -59.1269874
+    ##  (Intercept)        AtBat         Hits        HmRun         Runs          RBI 
+    ##  225.3772206   -1.2579356    2.5763843    7.5800212    2.5998357   -1.1016499 
+    ##        Walks        Years       CAtBat        CHits       CHmRun        CRuns 
+    ##    3.7953162   -5.1026991   -0.5314275    1.7848479    0.3404289    0.9712239 
+    ##         CRBI       CWalks      LeagueN    DivisionW      PutOuts      Assists 
+    ##    0.3449538   -0.5493695  -25.9030058 -132.4514142    0.3549658    0.5397729 
+    ##       Errors   NewLeagueN 
+    ##   -6.4374649   56.5884162
 
 ``` r
 ## set.seed(1)
@@ -490,7 +557,7 @@ bestlam = cv.out$lambda.min
 bestlam
 ```
 
-    ## [1] 93.17456
+    ## [1] 27.55538
 
   - 최적 ridge의 lambda 범위를 모아다 최솟값을 가져온 건데, 왜 seed가 필요할까.
   - 내부적으로 lambda를 찾을 때 resampling를 사용하는 건가.
@@ -502,7 +569,7 @@ ridge.pred = predict(ridge.mod, s = bestlam, newx = X[test,])
 mean((ridge.pred - y.test)^2)
 ```
 
-    ## [1] 154898
+    ## [1] 105698.4
 
 ##### lambda 구역을 설정하지 않은 적합을 해보자.
 
@@ -512,13 +579,13 @@ predict(out, type = "coefficients", s = bestlam)[1:20,]
 ```
 
     ##   (Intercept)         AtBat          Hits         HmRun          Runs 
-    ##  2.349469e+01 -1.350388e-01  1.433475e+00 -7.887635e-01  1.169917e+00 
+    ##  7.732447e+01 -6.408095e-01  2.666308e+00 -1.384049e+00  1.039996e+00 
     ##           RBI         Walks         Years        CAtBat         CHits 
-    ##  8.455914e-01  2.236319e+00 -3.207351e+00  9.405992e-03  8.504284e-02 
+    ##  7.281297e-01  3.296658e+00 -8.787386e+00 -1.202262e-04  1.326778e-01 
     ##        CHmRun         CRuns          CRBI        CWalks       LeagueN 
-    ##  5.521905e-01  1.689479e-01  1.775794e-01 -5.228094e-02  3.771676e+01 
+    ##  6.911234e-01  2.853960e-01  2.525259e-01 -2.635069e-01  5.249964e+01 
     ##     DivisionW       PutOuts       Assists        Errors    NewLeagueN 
-    ## -1.099122e+02  2.303289e-01  8.106120e-02 -2.703503e+00 -9.102023e-01
+    ## -1.224945e+02  2.626489e-01  1.641986e-01 -3.651728e+00 -1.722620e+01
 
 정말 ridge는 변수를 버릴 생각을 하지 않는구나.
 
@@ -549,7 +616,7 @@ lasso.pred = predict(lasso.mod, s = bestlam, newx = X[test,])
 mean((lasso.pred - y.test)^2)
 ```
 
-    ## [1] 158752.4
+    ## [1] 111401.8
 
 확실히 ridge랑 비슷한 값인 건만 알겠음.
 
@@ -560,13 +627,13 @@ lasso.coef
 ```
 
     ##   (Intercept)         AtBat          Hits         HmRun          Runs 
-    ##    1.13330530   -0.03681656    2.11666316    0.00000000    0.00000000 
+    ##  148.47005353   -1.86963995    6.48023063    0.74318790   -0.43858112 
     ##           RBI         Walks         Years        CAtBat         CHits 
-    ##    0.00000000    2.28336660   -0.22641303    0.00000000    0.00000000 
+    ##    0.00000000    5.37241599   -8.88140804   -0.03796356    0.00000000 
     ##        CHmRun         CRuns          CRBI        CWalks       LeagueN 
-    ##    0.02092321    0.21405170    0.41860656    0.00000000   19.06352253 
+    ##    0.38432164    0.95563867    0.49268060   -0.68200359   40.97231574 
     ##     DivisionW       PutOuts       Assists        Errors    NewLeagueN 
-    ## -115.50147435    0.23635272    0.00000000   -0.78443710    0.00000000
+    ## -117.61744368    0.28096830    0.26047170   -2.66957999   -5.33000840
 
 오 확실히 0인 건 있네. 랜덤성에 의해 12개가 0인 건 아니지만.
 
@@ -590,14 +657,14 @@ summary(pcr.fit)
     ## VALIDATION: RMSEP
     ## Cross-validated using 10 random segments.
     ##        (Intercept)  1 comps  2 comps  3 comps  4 comps  5 comps  6 comps
-    ## CV             452    355.9    354.7    354.5    352.8    347.9    345.1
-    ## adjCV          452    355.4    354.2    353.9    352.1    347.2    344.2
+    ## CV             452    351.6    350.2    350.5    347.7    347.6    345.2
+    ## adjCV          452    351.3    349.9    350.1    347.3    347.0    344.3
     ##        7 comps  8 comps  9 comps  10 comps  11 comps  12 comps  13 comps
-    ## CV       345.2    350.5    353.4     357.3     359.9     360.1     364.6
-    ## adjCV    344.4    349.4    352.1     355.6     358.1     358.3     362.6
+    ## CV       345.5    346.9    349.0     349.8     350.6     353.1     354.5
+    ## adjCV    344.6    345.9    347.9     348.6     349.2     351.7     352.9
     ##        14 comps  15 comps  16 comps  17 comps  18 comps  19 comps
-    ## CV        355.7     356.7     346.9     349.3     346.7     348.9
-    ## adjCV     353.3     354.5     344.9     346.9     344.3     346.4
+    ## CV        349.3     349.4     339.8     339.0     337.7     342.4
+    ## adjCV     347.6     347.7     338.1     337.3     335.9     340.3
     ## 
     ## TRAINING: % variance explained
     ##         1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps  8 comps
@@ -634,7 +701,7 @@ pcr.pred = predict(pcr.fit, X[test,], ncomp = 7)
 mean((pcr.pred - y.test)^2)
 ```
 
-    ## [1] 159970.2
+    ## [1] 106402.2
 
 ``` r
 pcr.fit = pcr(y ~ X, scale = T, ncomp = 7)
@@ -666,25 +733,25 @@ summary(pls.fit)
     ## VALIDATION: RMSEP
     ## Cross-validated using 10 random segments.
     ##        (Intercept)  1 comps  2 comps  3 comps  4 comps  5 comps  6 comps
-    ## CV           438.8    281.9    280.8    279.2    278.7    277.3    276.5
-    ## adjCV        438.8    281.7    280.1    278.2    277.5    275.9    274.9
+    ## CV           481.8    374.2    378.2    384.2    386.9    391.5    388.4
+    ## adjCV        481.8    373.4    376.9    381.7    383.9    386.5    382.9
     ##        7 comps  8 comps  9 comps  10 comps  11 comps  12 comps  13 comps
-    ## CV       277.5    283.0    284.6     283.9     284.4     282.5     281.0
-    ## adjCV    276.0    280.6    282.2     281.1     281.7     280.1     278.7
+    ## CV       383.7    381.9    378.4     377.3     384.7     381.2     383.4
+    ## adjCV    378.5    377.2    374.3     372.6     379.6     376.4     378.6
     ##        14 comps  15 comps  16 comps  17 comps  18 comps  19 comps
-    ## CV        282.2     282.4     285.4     288.9     290.1     288.7
-    ## adjCV     279.8     280.1     282.6     285.9     287.0     285.9
+    ## CV        378.6     374.6     374.0     375.9     377.3     375.9
+    ## adjCV     373.9     370.3     369.7     371.4     372.8     371.3
     ## 
     ## TRAINING: % variance explained
     ##         1 comps  2 comps  3 comps  4 comps  5 comps  6 comps  7 comps  8 comps
-    ## X         37.87    53.40    66.44    74.43    79.10    85.57    89.26    91.18
-    ## Salary    59.89    63.15    64.98    66.17    67.79    68.37    68.68    69.25
+    ## X         41.38    54.24    66.42    72.17    75.40    77.87     81.3    86.88
+    ## Salary    45.06    49.42    51.69    54.17    57.31    58.87     59.4    59.87
     ##         9 comps  10 comps  11 comps  12 comps  13 comps  14 comps  15 comps
-    ## X         94.30     95.18     96.83     98.02     98.64     99.04     99.41
-    ## Salary    69.41     69.84     70.04     70.22     70.33     70.36     70.45
+    ## X         92.69     93.64     96.53     97.26     98.46     98.70     99.03
+    ## Salary    60.19     60.68     60.90     61.43     61.58     62.04     62.22
     ##         16 comps  17 comps  18 comps  19 comps
-    ## X          99.57     99.86     99.95    100.00
-    ## Salary     70.68     70.69     70.71     70.72
+    ## X          99.48     99.76     99.97    100.00
+    ## Salary     62.34     62.47     62.50     62.71
 
 > plsr( ), 얘도 data는 “data=”으로 써야 하는 poor한 함수군요.
 
@@ -701,7 +768,7 @@ pls.pred = predict(pls.fit, X[test,], ncomp = 2)
 mean((pls.pred - y.test)^2)
 ```
 
-    ## [1] 158968.9
+    ## [1] 114018
 
 ``` r
 pls.fit = plsr(Salary~., data = Hitters, scale = T, ncomp = 2)

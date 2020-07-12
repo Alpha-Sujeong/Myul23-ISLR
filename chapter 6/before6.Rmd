@@ -98,14 +98,14 @@ coef(regfit.bwd, 7)
 
 #### 3. Choose model using Validation set or Cross-Validation
 
-```{r include = F}
+```{r message = F}
 ## set.seed(1)
 train = sample(c(T, F), nrow(Hitters), rep = T)
 test = (!train)
 ```
 Hitters의 행수만큼 t, f 랜덤 반복으로 생성
 
-```{r include = F}
+```{r message = F}
 regfit.best = regsubsets(Salary~., Hitters[train,], nvmax = 19)
 test.mat = model.matrix(Salary~., Hitters[test,])
 val.errors = rep(NA, 19)
@@ -123,7 +123,7 @@ coef(regfit.best, which.min(val.errors))
 어후 생각보다 beta_0랑 몇 개 회귀계수가 차이가 심하네, 그리고 errors의 최대값이 변해서 보여주는 회귀계수 수도 자꾸 변함.
 
 ##### custom predict for regsubsets function
-```{r include = F}
+```{r message = F}
 predict.regsubsets = function(object, newdata, id, ...) {
   form = as.formula(object$call[[2]])
   mat = model.matrix(form, newdata)
@@ -139,7 +139,7 @@ coef(regfit.best, which.min(val.errors))
 ```
 
 ##### select model when different size
-```{r include = F}
+```{r message = F}
 ## set.seed(1)
 k = 10
 folds = sample(1:k, nrow(Hitters), replace = T)
@@ -174,7 +174,7 @@ coef(reg.best, 11)
 와 역시 프로그래밍이 짱이야 alpha = 0이면 ridge고, 1이면 lasso야?<br />
 대단하다, 진짜 어지간히 하나로 만들고 싶었나보다.
 
-```{r include = F}
+```{r message = F}
 X = model.matrix(Salary~., Hitters)[, -1]
 y = Hitters$Salary
 ```
@@ -182,7 +182,7 @@ X: model의 예측변수들을 자동으로 수치화(더미화 포함)해서 ma
 
 #### 1. Ridge
 
-```{r include = F}
+```{r message = F}
 grid = 10^seq(10, -2, length = 100)
 ridge.mod = glmnet(X, y, alpha = 0, lambda = grid)
 ```
@@ -208,14 +208,14 @@ predict(ridge.mod, s = 50, type = "coefficients")[1:20,]
 ```
 
 #### validation set approach
-```{r include = F}
+```{r message = F}
 ## set.seed(1)
 train = sample(1:nrow(X), nrow(X)/2)
 test = (-train)
 y.test = y[test]
 ```
 
-```{r include = F}
+```{r message = F}
 ridge.mod = glmnet(X[train,], y[train], alpha = 0, lambda = grid, thresh = 1e-12)
 ```
 
