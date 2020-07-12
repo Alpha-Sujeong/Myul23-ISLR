@@ -27,7 +27,7 @@ lines(age.grid, preds$fit, lwd = 2, col = "blue")
 matlines(age.grid, se.bands, lwd = 1, col = "blue", lty = 3)
 
 
-# 추가) orthogonal vs. non-orthogonal(정확한 명칭 기억나지 않음.)
+# orthogonal vs. non-orthogonal(정확한 명칭 기억나지 않음.)
 fit2 = lm(wage ~ poly(age, 4, raw = T))
 # not orthogonal polynomials
 coef(summary(fit2))
