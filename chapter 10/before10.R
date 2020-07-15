@@ -1,0 +1,190 @@
+# Unsupervised: sample response doesn't exist, don't set specific variable
+# PCA(unsupervised) vs. PCR(supervised), ofcourse PLS(supervised)
+# PCA: loading vector(eigen vector), score vector(scaled with loading vector)
+# it MUST DO standardization before PCA. Sum of square of loading vector is 1, as expression of unit vector
+# first loading vector a little related with linear regression(or LDA)
+# PLA has certain limitation, if unsupervised
+# K-Means Clustering: k is the number of subgroups, minimize inner-variance grouping
+# draw randomly, repeat (find centroid(like perfect center), re-draw color nearest centroid)
+# Hierarchical Clustering: tree-like visual representation
+# linkage: Complete(maximal), Single(minimal), Average(mean), Centroid and so forth
+# Euclidean distance, Correlation-based distance and so on
+# BUT might be unrealistic
+
+
+
+# unsupervised learning functions by examples
+states = row.names(USArrests)
+names(USArrests)
+
+apply(USArrests, 2, mean)
+apply(USArrests, 2, var)
+
+pr.out = prcomp(USArrests, scale = T)
+# default: scaled to mean zero
+names(pr.out)
+
+pr.out$center
+pr.out$scale
+pr.out$rotation # loading vector
+dim(pr.out$x)
+
+biplot(pr.out, scale = 0)
+# overall sign change is possible
+
+pr.out$rotation = -pr.out$rotation
+pr.out$x = -pr.out$x
+biplot(pr.out, scale = 0)
+
+
+pr.var = pr.out$sdev^2
+pve = pr.var/sum(pr.var); rm(pr.var)
+pve
+
+par(mfrow = c(1,2))
+plot(pve, xlab = "Principal Component", ylab = "Proportion of Variance Explained",
+     ylim = c(0,1), type = 'b')
+plot(cumsum(pve), xlab = "Principal Component", ylab = "Cumulative Proportion of Variance Explained",
+     ylim = c(0,1), type = 'b')
+
+# cumsum() check
+# a = c(1, 2, 8, -3)
+# cumsum(a)
+
+
+
+# Clustering
+# K-Means Clustering
+# set.seed(2)
+X = matrix(rnorm(50*2), ncol = 2)
+X[1:25, 1] = X[1:25, 1] + 3
+X[1:25, 2] = X[1:25, 2] - 4
+
+km.out = kmeans(X, 2, nstart = 20)
+km.out$cluster
+# perfectly separate
+
+par(mfrow = c(1,1))
+plot(X, col = (km.out$cluster + 1), main = "K-Means Clustering Results with K = 2",
+     xlab = "", ylab = "", pch = 20, cex = 2)
+
+# set.seed(4)
+km.out = kmeans(X, 3, nstart = 20)
+km.out
+plot(X, col = c(km.out$cluster + 1), main = "K-Means Clustering Results with K = 3",
+     xlab = "", ylab = "", pch = 20, cex = 2)
+# separate left top, little right middle, right bottom
+
+# set.seed(3)
+km.out = kmeans(X, 3, nstart = 1)
+km.out$tot.withinss
+
+km.out = kmeans(X, 3, nstart = 20)
+km.out$tot.withinss
+# nstart: the number of repeat
+# tot.withinss: total inner-variance
+
+
+# Hierarchical Clustering
+hc.complete = hclust(dist(X), "complete")
+hc.average = hclust(dist(X), "average")
+hc.single = hclust(dist(X), "single")
+
+par(mfrow = c(1,3))
+plot(hc.complete, main = "Complete Linkage", xlab = "", ylab = "", sub = "", cex = .9)
+plot(hc.average, main = "Average Linkage", xlab = "", ylab = "", sub = "", cex = .9)
+plot(hc.single, main = "Single Linkage", xlab = "", ylab = "", sub = "", cex = .9)
+
+cutree(hc.complete, 2)
+cutree(hc.average, 2)
+cutree(hc.single, 2)
+# alike and differ
+
+xsc = scale(X)
+par(mfrow = c(1,1))
+plot(hclust(dist(xsc), "complete"), main = "Hierarchical Clustering with Scaled Features",
+     xlab = "", ylab = "", sub = "")
+
+
+# Correlation-based distance
+X = matrix(rnorm(30*3), ncol = 3)
+plot(hclust(as.dist(1 - cor(t(X))), "complete"), main = "Complete Linkage with 
+     Correlation-Based Distance", xlab = "", ylab = "", sub = "")
+
+
+
+# NCI60 Data
+library(ISLR) # data: NCI60 (cancer data)
+
+nci.labs = NCI60$labs
+nci.data = NCI60$data
+
+dim(nci.data)
+nci.labs[1:4]
+table(nci.labs)
+
+
+# PCA on the data
+pr.out = prcomp(nci.data, scale = T)
+
+Cols = function(vec) {
+        cols = rainbow(length(unique(vec)))
+        return(cols[as.numeric(as.factor(vec))])
+}
+
+par(mfrow = c(1,2))
+plot(pr.out$x[, 1:2], col = Cols(nci.labs), pch = 19, xlab = "Z1", ylab = "Z2")
+plot(pr.out$x[, c(1,3)], col = Cols(nci.labs), pch = 19, xlab = "Z1", ylab = "Z3")
+# didn't see as similar gene, very messy colorful?
+
+summary(pr.out)
+# summary(pr.out)$importance
+
+par(mfrow = c(1,1))
+plot(pr.out)
+# square of sdev
+
+pve = 100 * pr.out$sdev^2/sum(pr.out$sdev^2)
+
+par(mfrow = c(1,2))
+plot(pve, type = 'o', xlab = "Principal Component", ylab = "PVE", col = "lightblue")
+plot(cumsum(pve), type = 'o', xlab = "Principal Component", ylab = "Cumulative PVE",
+     col = "lightseagreen") # brown3
+# elbow point is 7
+
+
+# Clustering on the data
+sd.data = scale(nci.data)
+
+par(mfrow = c(3,1))
+data.dist = dist(sd.data)
+plot(hclust(data.dist), labels = nci.labs, main = "Complete Linkage", xlab = "", ylab = "", sub = "")
+plot(hclust(data.dist, "average"), labels = nci.labs, main = "Average Linkage", xlab = "", ylab = "", sub = "")
+plot(hclust(data.dist, "single"), labels = nci.labs, main = "Single Linkage", xlab = "", ylab = "", sub = "")
+rm(data.dist)
+
+
+hc.out = hclust(dist(sd.data))
+hc.clusters = cutree(hc.out, 4)
+# cutree( ) doesn't say cut point?
+table(hc.clusters, nci.labs)
+
+par(mfrow = c(1,1))
+plot(hc.out, labels = nci.labs, sub = "")
+abline(h = 139, col = "red")
+
+hc.out
+
+
+# set.seed(2)
+km.out = kmeans(sd.data, 4, nstart = 20)
+km.clusters = km.out$cluster
+table(km.clusters, hc.clusters)
+# hierarchical is un-realistic
+
+
+hc.out = hclust(dist(pr.out$x[, 1:5]))
+plot(hc.out, labels = nci.labs, main = "Hier. Clust. on First Five Score Vectors", sub = "")
+# abline(h = 100, col = "red")
+table(cutree(hc.out, 4), nci.labs)
+# changed lots of things
