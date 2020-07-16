@@ -17,8 +17,8 @@ classify를 위해서 Bayes' Theoream을 이용, Bayes' Classifier를 구해야 
 
 ### pre-requires
 ```{r warning = F, message = F}
-library(MASS)   # lda()
-library(class)  # knn()
+library(MASS)     ## lda()
+library(class)    ## knn()
 data(Smarket, package = "ISLR")
 attach(Smarket)
 ```

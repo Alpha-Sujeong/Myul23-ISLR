@@ -15,9 +15,8 @@ knitr::opts_chunk$set(echo = T, warning = F, fig.width = 10, fig.height = 6, fig
 
 ### pre-requires
 ```{r message = F}
-## library(ISLR)
-library(splines)    # ns()
-library(gam)        # s(), plot.Gam()
+library(splines)    ## ns()
+library(gam)        ## s(), plot.Gam()
 data(Wage, package = "ISLR")
 attach(Wage)
 ```

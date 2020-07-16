@@ -15,7 +15,6 @@ knitr::opts_chunk$set(echo = T, fig.align = "center")
 
 ### pre-requires
 ```{r warning = F, message = F}
-## library(ISLR)
 library(splines)    ## smooth.spline(), ns()
 data(Wage, package = "ISLR")
 attach(Wage)

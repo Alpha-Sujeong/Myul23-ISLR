@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = T)
 
 ### pre-requires
 ```{r warning = F, message = F}
-library(boot)   # cv.glm()
+library(boot)     # cv.glm()
 data(Auto, package = "ISLR")
 data(Portfolio, package = "ISLR")
 ```
