@@ -154,7 +154,8 @@ boost.boston = gbm(medv ~., Boston[train,], distribution = "gaussian",
 summary(boost.boston)
 # 중요도 확인하게 sorting되어 나옴.
 
-par(mfrow = c(1, 2))
+# par(mfrow = c(1, 2))
+# 흠 먹질 않아요.
 plot(boost.boston, i = "rm")
 plot(boost.boston, i = "lstat")
 
