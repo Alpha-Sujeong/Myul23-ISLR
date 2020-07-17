@@ -116,6 +116,11 @@ plot(hclust(as.dist(1 - cor(t(X))), "complete"), main = "Complete Linkage with
 # NCI60 Data
 library(ISLR) # data: NCI60 (cancer data)
 
+# storing
+dim(NCI60$data); length(NCI60$labs)
+NCI60_ = cbind(NCI60$data, NCI60$labs)
+write.csv(NCI60_, "NCI60.csv", row.names = F, quote = F)
+
 nci.labs = NCI60$labs
 nci.data = NCI60$data
 

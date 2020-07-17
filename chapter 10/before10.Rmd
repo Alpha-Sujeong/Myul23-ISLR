@@ -24,13 +24,18 @@ Unsupervised: sample response doesn't exist, don't set specific variable
 
 ### pre-requires
 ```{r warning = F, message = F}
-data(USArrests)
+data(USArrests, package = "base")
 data(NCI60, package = "ISLR")
 ```
 
 store unique data sets.
 ```{r eval = F}
-write.csv(NCI60, "NCI60.csv", row.names = T, quote = F)
+write.csv(USArrests, "USArrests.csv", row.names = T, quote = F)
+```
+
+```{r eval = F}
+NCI60_ = cbind(NCI60$data, NCI60$labs)
+write.csv(NCI60_, "NCI60.csv", row.names = F, quote = F)
 ```
 
 ---
