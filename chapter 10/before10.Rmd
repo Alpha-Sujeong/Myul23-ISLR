@@ -8,6 +8,7 @@ knitr::opts_chunk$set(echo = T, fig.align = "center")
 ```
 
 Unsupervised: sample response doesn't exist, don't set specific variable
+
 - PCA(unsupervised) vs. PCR(supervised), ofcourse PLS(supervised)
 - PCA: loading vector(eigen vector), score vector(scaled with loading vector)
 - it MUST DO standardization before PCA. Sum of square of loading vector is 1, as expression of unit vector
@@ -24,7 +25,7 @@ Unsupervised: sample response doesn't exist, don't set specific variable
 
 ### pre-requires
 ```{r warning = F, message = F}
-data(USArrests, package = "base")
+data(USArrests, package = "datasets")
 data(NCI60, package = "ISLR")
 ```
 

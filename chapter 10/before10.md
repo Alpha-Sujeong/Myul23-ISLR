@@ -2,15 +2,15 @@
 ================
 
 Unsupervised: sample response doesn’t exist, don’t set specific variable
-- PCA(unsupervised) vs. PCR(supervised), ofcourse PLS(supervised) - PCA:
-loading vector(eigen vector), score vector(scaled with loading vector) -
-it MUST DO standardization before PCA. Sum of square of loading vector
-is 1, as expression of unit vector - first loading vector a little
-related with linear regression(or LDA) - PLA has certain limitation, if
-unsupervised
 
-<hr />
-
+  - PCA(unsupervised) vs. PCR(supervised), ofcourse PLS(supervised)
+  - PCA: loading vector(eigen vector), score vector(scaled with loading
+    vector)
+  - it MUST DO standardization before PCA. Sum of square of loading
+    vector is 1, as expression of unit vector
+  - first loading vector a little related with linear regression(or LDA)
+  - PLA has certain limitation, if unsupervised
+    <hr />
   - K-Means Clustering: k is the number of subgroups, minimize
     inner-variance grouping
   - draw randomly, repeat (find centroid(like perfect center), re-draw
@@ -24,14 +24,19 @@ unsupervised
 ### pre-requires
 
 ``` r
-data(USArrests)
+data(USArrests, package = "datasets")
 data(NCI60, package = "ISLR")
 ```
 
 store unique data sets.
 
 ``` r
-write.csv(NCI60, "NCI60.csv", row.names = T, quote = F)
+write.csv(USArrests, "USArrests.csv", row.names = T, quote = F)
+```
+
+``` r
+NCI60_ = cbind(NCI60$data, NCI60$labs)
+write.csv(NCI60_, "NCI60.csv", row.names = F, quote = F)
 ```
 
 -----
@@ -111,7 +116,7 @@ dim(pr.out$x)
 biplot(pr.out, scale = 0)
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
 
   - overall sign change is possible
 
@@ -126,7 +131,7 @@ pr.out$x = -pr.out$x
 biplot(pr.out, scale = 0)
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
 
 ``` r
 pr.var = pr.out$sdev^2
@@ -142,7 +147,7 @@ plot(pve, xlab = "Principal Component", ylab = "Proportion of Variance Explained
 plot(cumsum(pve), xlab = "Principal Component", ylab = "Cumulative Proportion of Variance Explained", ylim = c(0,1), type = 'b')
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
 
 ##### addition, cumsum function check
 
@@ -181,7 +186,7 @@ km.out$cluster
 plot(X, col = (km.out$cluster + 1), main = "K-Means Clustering Results with K = 2", xlab = "", ylab = "", pch = 20, cex = 2)
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
 
 ``` r
 ## set.seed(4)
@@ -189,21 +194,21 @@ km.out = kmeans(X, 3, nstart = 20)
 km.out
 ```
 
-    ## K-means clustering with 3 clusters of sizes 10, 25, 15
+    ## K-means clustering with 3 clusters of sizes 24, 11, 15
     ## 
     ## Cluster means:
-    ##        [,1]         [,2]
-    ## 1  3.911028 -3.390179953
-    ## 2 -0.348671  0.003522189
-    ## 3  2.030460 -4.533620585
+    ##        [,1]       [,2]
+    ## 1 0.4196481 -0.2605603
+    ## 2 3.9215091 -4.8513233
+    ## 3 2.6616783 -3.2881804
     ## 
     ## Clustering vector:
-    ##  [1] 1 3 3 3 1 3 3 1 1 3 1 3 1 3 3 3 3 3 1 1 1 3 3 1 3 2 2 2 2 2 2 2 2 2 2 2 2 2
-    ## [39] 2 2 2 2 2 2 2 2 2 2 2 2
+    ##  [1] 3 2 3 2 2 3 2 3 3 2 3 3 3 3 3 2 2 3 3 2 2 3 3 2 2 3 1 1 1 1 1 1 1 1 1 1 1 1
+    ## [39] 1 1 1 1 1 1 1 1 1 1 1 1
     ## 
     ## Within cluster sum of squares by cluster:
-    ## [1] 11.93277 44.25812 14.31212
-    ##  (between_SS / total_SS =  83.6 %)
+    ## [1] 23.865876  6.454541 23.198084
+    ##  (between_SS / total_SS =  84.5 %)
     ## 
     ## Available components:
     ## 
@@ -214,7 +219,7 @@ km.out
 plot(X, col = c(km.out$cluster + 1), main = "K-Means Clustering Results with K = 3", xlab = "", ylab = "", pch = 20, cex = 2)
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-19-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-20-1.png" style="display: block; margin: auto;" />
 
   - separate left top, little right middle, right bottom
 
@@ -226,7 +231,7 @@ km.out = kmeans(X, 3, nstart = 1)
 km.out$tot.withinss
 ```
 
-    ## [1] 70.50301
+    ## [1] 64.92327
 
 > nstart: the number of repeat
 
@@ -235,7 +240,7 @@ km.out = kmeans(X, 3, nstart = 20)
 km.out$tot.withinss
 ```
 
-    ## [1] 70.50301
+    ## [1] 53.5185
 
 > tot.withinss: total inner-variance
 
@@ -254,28 +259,28 @@ plot(hc.average, main = "Average Linkage", xlab = "", ylab = "", sub = "", cex =
 plot(hc.single, main = "Single Linkage", xlab = "", ylab = "", sub = "", cex = .9)
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-23-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-24-1.png" style="display: block; margin: auto;" />
 
 ``` r
 cutree(hc.complete, 2)
 ```
 
-    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
-    ## [39] 2 2 2 2 2 2 2 2 2 2 2 2
+    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2
+    ## [39] 2 2 2 2 2 2 2 2 2 2 2 1
 
 ``` r
 cutree(hc.average, 2)
 ```
 
-    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
+    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2
     ## [39] 2 2 2 2 2 2 2 2 2 2 2 2
 
 ``` r
 cutree(hc.single, 2)
 ```
 
-    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
-    ## [39] 2 2 2 2 2 2 2 2 2 2 2 2
+    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+    ## [39] 1 1 1 1 1 1 1 1 1 1 1 1
 
 alike and differ
 
@@ -284,7 +289,7 @@ xsc = scale(X)
 plot(hclust(dist(xsc), "complete"), main = "Hierarchical Clustering with Scaled Features", xlab = "", ylab = "", sub = "")
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-25-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-26-1.png" style="display: block; margin: auto;" />
 아, 나 저 글씨 뒤집는 거 배웠는데 기억이 안 난다.
 
 ##### Correlation-based distance
@@ -294,7 +299,7 @@ X = matrix(rnorm(30*3), ncol = 3)
 plot(hclust(as.dist(1 - cor(t(X))), "complete"), main = "Complete Linkage with Correlation-Based Distance", xlab = "", ylab = "", sub = "")
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-26-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-27-1.png" style="display: block; margin: auto;" />
 
 -----
 
@@ -348,7 +353,7 @@ plot(pr.out$x[, 1:2], col = Cols(nci.labs), pch = 19, xlab = "Z1", ylab = "Z2")
 plot(pr.out$x[, c(1,3)], col = Cols(nci.labs), pch = 19, xlab = "Z1", ylab = "Z3")
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-31-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-32-1.png" style="display: block; margin: auto;" />
 
   - didn’t see as similar gene, very messy colorful?
 
@@ -408,7 +413,7 @@ summary(pr.out)
 plot(pr.out)
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-33-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-34-1.png" style="display: block; margin: auto;" />
 
   - square of sdev
 
@@ -424,7 +429,7 @@ plot(pve, type = 'o', xlab = "Principal Component", ylab = "PVE", col = "lightbl
 plot(cumsum(pve), type = 'o', xlab = "Principal Component", ylab = "Cumulative PVE", col = "lightseagreen")
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-35-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-36-1.png" style="display: block; margin: auto;" />
 
   - brown3
 
@@ -441,19 +446,19 @@ data.dist = dist(sd.data)
 plot(hclust(data.dist), labels = nci.labs, main = "Complete Linkage", xlab = "", ylab = "", sub = "")
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-37-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-38-1.png" style="display: block; margin: auto;" />
 
 ``` r
 plot(hclust(data.dist, "average"), labels = nci.labs, main = "Average Linkage", xlab = "", ylab = "", sub = "")
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-37-2.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-38-2.png" style="display: block; margin: auto;" />
 
 ``` r
 plot(hclust(data.dist, "single"), labels = nci.labs, main = "Single Linkage", xlab = "", ylab = "", sub = "")
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-37-3.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-38-3.png" style="display: block; margin: auto;" />
 
 ``` r
 hc.out = hclust(dist(sd.data))
@@ -484,7 +489,7 @@ plot(hc.out, labels = nci.labs, sub = "", xlab = "")
 abline(h = 139, col = "red")
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-40-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-41-1.png" style="display: block; margin: auto;" />
 
 ``` r
 hc.out
@@ -507,8 +512,8 @@ table(km.clusters, hc.clusters)
 
     ##            hc.clusters
     ## km.clusters  1  2  3  4
-    ##           1 20  7  0  0
-    ##           2 11  0  0  9
+    ##           1 11  0  0  9
+    ##           2 20  7  0  0
     ##           3  9  0  0  0
     ##           4  0  0  8  0
 
@@ -524,7 +529,7 @@ hc.out = hclust(dist(pr.out$x[, 1:5]))
 plot(hc.out, labels = nci.labs, main = "Hier. Clust. on First Five Score Vectors", sub = "", xlab = "")
 ```
 
-<img src="before10_files/figure-gfm/unnamed-chunk-44-1.png" style="display: block; margin: auto;" />
+<img src="before10_files/figure-gfm/unnamed-chunk-45-1.png" style="display: block; margin: auto;" />
 
 ``` r
 ## abline(h = 100, col = "red")
