@@ -35,7 +35,7 @@ write.csv(USArrests, "USArrests.csv", row.names = T, quote = F)
 ```
 
 ``` r
-NCI60_ = cbind(NCI60$data, NCI60$labs)
+NCI60_ = cbind(NCI60$labs, NCI60$data)
 write.csv(NCI60_, "NCI60.csv", row.names = F, quote = F)
 ```
 
@@ -175,8 +175,8 @@ km.out = kmeans(X, 2, nstart = 20)
 km.out$cluster
 ```
 
-    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
-    ## [39] 2 2 2 2 2 2 2 2 2 2 2 2
+    ##  [1] 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 1 1 1 1 1 1 1 1 1 1 1 1 1
+    ## [39] 1 1 1 1 1 1 1 1 1 1 1 1
 
   - perfectly separate
 
@@ -194,21 +194,21 @@ km.out = kmeans(X, 3, nstart = 20)
 km.out
 ```
 
-    ## K-means clustering with 3 clusters of sizes 24, 11, 15
+    ## K-means clustering with 3 clusters of sizes 12, 13, 25
     ## 
     ## Cluster means:
-    ##        [,1]       [,2]
-    ## 1 0.4196481 -0.2605603
-    ## 2 3.9215091 -4.8513233
-    ## 3 2.6616783 -3.2881804
+    ##       [,1]       [,2]
+    ## 1 3.893515 -3.3753727
+    ## 2 2.046009 -4.2907388
+    ## 3 0.258851  0.2706826
     ## 
     ## Clustering vector:
-    ##  [1] 3 2 3 2 2 3 2 3 3 2 3 3 3 3 3 2 2 3 3 2 2 3 3 2 2 3 1 1 1 1 1 1 1 1 1 1 1 1
-    ## [39] 1 1 1 1 1 1 1 1 1 1 1 1
+    ##  [1] 2 2 1 1 2 1 2 1 2 2 1 1 1 1 1 1 2 2 1 2 1 2 2 2 2 3 3 3 3 3 3 3 3 3 3 3 3 3
+    ## [39] 3 3 3 3 3 3 3 3 3 3 3 3
     ## 
     ## Within cluster sum of squares by cluster:
-    ## [1] 23.865876  6.454541 23.198084
-    ##  (between_SS / total_SS =  84.5 %)
+    ## [1] 16.412739  9.222623 34.250231
+    ##  (between_SS / total_SS =  84.6 %)
     ## 
     ## Available components:
     ## 
@@ -231,7 +231,7 @@ km.out = kmeans(X, 3, nstart = 1)
 km.out$tot.withinss
 ```
 
-    ## [1] 64.92327
+    ## [1] 71.85438
 
 > nstart: the number of repeat
 
@@ -240,7 +240,7 @@ km.out = kmeans(X, 3, nstart = 20)
 km.out$tot.withinss
 ```
 
-    ## [1] 53.5185
+    ## [1] 59.88559
 
 > tot.withinss: total inner-variance
 
@@ -265,22 +265,22 @@ plot(hc.single, main = "Single Linkage", xlab = "", ylab = "", sub = "", cex = .
 cutree(hc.complete, 2)
 ```
 
-    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2
-    ## [39] 2 2 2 2 2 2 2 2 2 2 2 1
+    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
+    ## [39] 2 2 2 2 2 2 2 2 2 2 2 2
 
 ``` r
 cutree(hc.average, 2)
 ```
 
-    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2
+    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
     ## [39] 2 2 2 2 2 2 2 2 2 2 2 2
 
 ``` r
 cutree(hc.single, 2)
 ```
 
-    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-    ## [39] 1 1 1 1 1 1 1 1 1 1 1 1
+    ##  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2
+    ## [39] 2 2 2 2 2 2 2 2 2 2 2 2
 
 alike and differ
 
@@ -512,10 +512,10 @@ table(km.clusters, hc.clusters)
 
     ##            hc.clusters
     ## km.clusters  1  2  3  4
-    ##           1 11  0  0  9
-    ##           2 20  7  0  0
-    ##           3  9  0  0  0
-    ##           4  0  0  8  0
+    ##           1  9  0  0  0
+    ##           2 11  0  0  9
+    ##           3  0  0  8  0
+    ##           4 20  7  0  0
 
   - hierarchical is un-realistic
 

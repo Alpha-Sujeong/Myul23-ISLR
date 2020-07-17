@@ -118,7 +118,7 @@ library(ISLR) # data: NCI60 (cancer data)
 
 # storing
 dim(NCI60$data); length(NCI60$labs)
-NCI60_ = cbind(NCI60$data, NCI60$labs)
+NCI60_ = cbind(NCI60$labs, NCI60$data)
 write.csv(NCI60_, "NCI60.csv", row.names = F, quote = F)
 
 nci.labs = NCI60$labs

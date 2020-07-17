@@ -35,7 +35,7 @@ write.csv(USArrests, "USArrests.csv", row.names = T, quote = F)
 ```
 
 ```{r eval = F}
-NCI60_ = cbind(NCI60$data, NCI60$labs)
+NCI60_ = cbind(NCI60$labs, NCI60$data)
 write.csv(NCI60_, "NCI60.csv", row.names = F, quote = F)
 ```
 
