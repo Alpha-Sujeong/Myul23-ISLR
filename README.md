@@ -40,6 +40,7 @@ Make this repository public 설정에 Make Public 버튼을 누르고 저장하�
 
 4. 추가 사항
 
+- rpy2는 로컬로 R을 열어서 데이터를 연결하는 방식으로 보이며, 이는 결국 로컬에 R과 해당 라이브러리, 당연히 rp2(python)도 탑재되어 있어야 하는 것으로 보임. 참고로 VCS의 R도 로컬.
 - Rmd. official이 github_document라 해서 쓰긴 하는데, 파일이 좀 많이 생기지만, 해본다.
 - Rmd -> md에서 fig.align = "center"가 안 먹는다, 그냥 fig.width = 10으로 고정시켜버릴까.
-- rpy2는 로컬로 R을 열어서 데이터를 연결하는 방식으로 보이며, 이는 결국 로컬에 R과 해당 라이브러리, 당연히 rp2(python)도 탑재되어 있어야 하는 것으로 보임. 참고로 VCS의 R도 로컬.
+- i-python의 연결이 불안해서 html에서 onload link를 이용하려 했으나 그렇게 되면, 공유 파일의 제어가 귀찮아질 수 있으므로 일단 현상 유지.
