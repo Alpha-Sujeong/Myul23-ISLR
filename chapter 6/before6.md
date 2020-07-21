@@ -9,7 +9,7 @@ reduction
   - Cp(단순 scale의 추가가 AIC라 유사함), BIC, Adjusted-R^2로 비교하는데, BIC를 제일 선호함.
   - Loss나 Loss + Panelty로 구성됨.
   - regularization: ridge regression, the lasso
-  - dimension reduction: pcr(pca regression, unsupervised) and pls
+  - dimension reduction: pcr(pca regression, supervised) and pls
   - PLS (Partial Least Squares): supervised, first principal component
     is scaling sum
 
