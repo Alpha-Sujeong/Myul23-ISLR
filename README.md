@@ -1,5 +1,5 @@
 > ## Alpha
-- Studied Book: [An Introduction to Statistical Learning with application in R seventh edition](https://www.google.com/search?sxsrf=ALeKk03Lx5KEuu8R-EzQ6KTwIVHdqNtfeg%3A1594810049744&source=hp&ei=wd4OX8-cKsesmAX2prHoCw&q=Introduce+to+Statistical+Learning+with+R+seventh&oq=Introduce+to+Statistical+Learning+with+R+seventh&gs_lcp=CgZwc3ktYWIQAzoECCMQJzoICAAQsQMQgwE6BQgAELEDOgIIADoECAAQAzoECAAQHjoGCAAQCBAeUNsPWNCuAWCssgFoAnAAeACAAcUBiAGQQJIBBDAuNTSYAQCgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiPgfyzis_qAhVHFqYKHXZTDL0Q4dUDCAc&uact=5)
+- Studied Book: [An Introduction to Statistical Learning with applications in R seventh edition](https://www.google.com/search?sxsrf=ALeKk03Lx5KEuu8R-EzQ6KTwIVHdqNtfeg%3A1594810049744&source=hp&ei=wd4OX8-cKsesmAX2prHoCw&q=Introduce+to+Statistical+Learning+with+R+seventh&oq=Introduce+to+Statistical+Learning+with+R+seventh&gs_lcp=CgZwc3ktYWIQAzoECCMQJzoICAAQsQMQgwE6BQgAELEDOgIIADoECAAQAzoECAAQHjoGCAAQCBAeUNsPWNCuAWCssgFoAnAAeACAAcUBiAGQQJIBBDAuNTSYAQCgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiPgfyzis_qAhVHFqYKHXZTDL0Q4dUDCAc&uact=5)
 - before, [after](https://github.com/0liu/ISLR), [advanced](https://github.com/younggyoseo/ISLR-with-Python)
 
 ```
